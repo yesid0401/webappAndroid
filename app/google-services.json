@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "630213742527",
+    "project_id": "tissini-app",
+    "storage_bucket": "tissini-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630213742527:android:856fb2c2b94af3c98a1b0a",
+        "android_client_info": {
+          "package_name": "com.tissini.webview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "630213742527-ed9vb57jqnu704hq95sve9usd2a91u3a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tissini.webview",
+            "certificate_hash": "3555474d1349d1f41eefae13962b5ab721e7390d"
+          }
+        },
+        {
+          "client_id": "630213742527-8d4a1e3j2l29je7mi8q6iecirefb2pm3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNcVrVMhkBMgu6SWrIDKFdo215UptkLfw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "630213742527-8d4a1e3j2l29je7mi8q6iecirefb2pm3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
