@@ -20,18 +20,11 @@ public class WebAppInterface {
     @JavascriptInterface
     public void shareApi( String title,String body) {
 
-        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, body);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, title);
+        intent.putExtra(Intent.EXTRA_TEXT, body);
+        mContext.startActivity(Intent.createChooser(intent, title));
 
-        // (Optional) Here we're setting the title of the content
-        sendIntent.putExtra(Intent.EXTRA_TITLE, title);
-
-        // (Optional) Here we're passing a content URI to an image to be displayed
-        //sendIntent.setData(appLinkData);
-
-        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-        // Show the Sharesheet
-        activity.startActivity(Intent.createChooser(sendIntent, null));
     }
 }

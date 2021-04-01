@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TISSINI APP</string>
+    <string name="user_agent_suffix">TISSINIAPP/3.0</string>
 </resources>
