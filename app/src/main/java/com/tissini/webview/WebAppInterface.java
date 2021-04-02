@@ -1,16 +1,11 @@
 package com.tissini.webview;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
+
 
 public class WebAppInterface {
     Context mContext;
-    Activity activity;
-
     /** Instantiate the interface and set the context */
     WebAppInterface(Context c) {
         mContext = c;

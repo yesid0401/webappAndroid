@@ -40,6 +40,8 @@ import com.google.gson.JsonParser;
 import com.google.firebase.messaging.RemoteMessage;
 import com.pusher.pushnotifications.PushNotificationReceivedListener;
 import com.pusher.pushnotifications.PushNotifications;
+import com.tissini.webview.models.MywebChromeClient;
+import com.tissini.webview.models.MywebViewClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,7 +64,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
     WebView webView;
     WebSettings webSettings;
-    String url = "https://stage.tissini.dev/158966";
+    String url = "https://tissini.app";
     private final static  String CHANEL_ID = "tissini";
     private final static  String CHANEL_ID_NAME = "tissini";
     private final static int NOTIFICATION_ID = 0;
@@ -84,13 +86,13 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PushNotifications.start(getApplicationContext(), "c5b50bd9-f225-4b64-9352-b9851a952b1f");
-        PushNotifications.addDeviceInterest("general");
-//
-//        PushNotifications.stop();
-//
-//        PushNotifications.clearDeviceInterests();
 
+        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
+        PushNotifications.addDeviceInterest("general");
+
+//        PushNotifications.stop();
+//        PushNotifications.removeDeviceInterest("general");
+//        PushNotifications.clearDeviceInterests();
 
         /// nuevo
 //        Retrofit retrofit = new Retrofit.Builder()
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         webView.setWebChromeClient(new MywebChromeClient());
-        webView.setWebViewClient(new MywebViewClient());
+        webView.setWebViewClient(new MywebViewClient(this.progressBar,this.webView,this));
         webView.addJavascriptInterface(new WebAppInterface(this), "Webview");
 
         loadWebview();
@@ -120,57 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    // esto es nuevo
-   /* private void createInterest(String user_id,String user_stage ) {
-        Interest interest =  new Interest(user_id,user_stage);
-        Call<Interest> call = interestApi.createInterest(interest);
 
-        call.enqueue(new Callback<Interest>() {
-            @Override
-            public void onResponse(Call<Interest> call, Response<Interest> response) {
-                if(!response.isSuccessful()){
-                    System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
-                }
-
-                Interest interest = response.body();
-
-                System.out.println("user_id => "+interest.getUser_id());
-                System.out.println("stage_id => "+interest.getUser_stage());
-            }
-
-            @Override
-            public void onFailure(Call<Interest> call, Throwable t) {
-                System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE FAILURE => "+t.getMessage());
-            }
-        });
-    }*/
-    // esto es nuevo
-   /* private void getInterests( ) {
-        Call<List<Interest>> call = interestApi.getInterests();
-
-        call.enqueue(new Callback<List<Interest>>() {
-            @Override
-            public void onResponse(Call<List<Interest>> call, Response<List<Interest>> response) {
-                if(!response.isSuccessful()){
-                    System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
-                }
-                List<Interest> interests = response.body();
-
-                for (Interest interest : interests ){
-                    System.out.println("ID => "+interest.getId());
-                    System.out.println("NAME => "+interest.getName());
-                    System.out.println("STATUS => "+interest.getStatus());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Interest>> call, Throwable t) {
-                System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE FAILURE "+t.getMessage());
-            }
-        });
-
-    }
-*/
     public  void onRefresh(){
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
@@ -233,6 +185,16 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    @Override
+    public void onBackPressed(){
+        if(webView.canGoBack()){
+            webView.goBack();
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+
     public void createNotificationChanel(){
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -273,102 +235,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onBackPressed(){
-        if(webView.canGoBack()){
-            webView.goBack();
-        }else{
-            super.onBackPressed();
-            //System.exit(0);
-            //  finish();
+    // esto es nuevo
+   /* private void createInterest(String user_id,String user_stage ) {
+        Interest interest =  new Interest(user_id,user_stage);
+        Call<Interest> call = interestApi.createInterest(interest);
 
-        }
-    }
-
-    private class MywebViewClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView wv, String url) {
-            if(url.startsWith("whatsapp:") || url.startsWith("tel:") || url.startsWith("intent://") || url.startsWith("http://")) {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(url));
-                    startActivity(intent);
-                    webView.goBack();
-                    return true;
-                }catch (android.content.ActivityNotFoundException e){
-                    System.out.println("Error with " + url + ": " + e.toString());
+        call.enqueue(new Callback<Interest>() {
+            @Override
+            public void onResponse(Call<Interest> call, Response<Interest> response) {
+                if(!response.isSuccessful()){
+                    System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
                 }
 
+                Interest interest = response.body();
+
+                System.out.println("user_id => "+interest.getUser_id());
+                System.out.println("stage_id => "+interest.getUser_stage());
             }
-            return false;
-        }
 
-        public void addInteres(String value){
-            if(!value.equals("null")){
-                JsonParser parser    = new JsonParser();
-                JsonElement jsonTree = parser.parse(value);
-
-                JsonObject jsonObject = jsonTree.getAsJsonObject();
-                JsonElement id        = jsonObject.get("id");
-                JsonElement stage     = jsonObject.get("stage");
-                JsonElement elite     = jsonObject.get("elite");
-
-                JsonElement jsonTree2  = parser.parse(String.valueOf(elite));
-                JsonObject jsonObject2 = jsonTree2.getAsJsonObject();
-                JsonElement escalafon  = jsonObject2.get("escalafon");
-
-                String user_id         = (String) id.toString();
-                String user_stage      = (String) stage.toString().replaceAll("^[\"']+|[\"']+$", "");
-                String user_escalafon  = (String) escalafon.toString();
-
-
-                PushNotifications.addDeviceInterest(user_id);
-                PushNotifications.addDeviceInterest("Login");
-                PushNotifications.addDeviceInterest(user_stage);
-                PushNotifications.removeDeviceInterest("noLogin");
-
-                // esto es nuevo
-//                createInterest(user_id,user_stage);
-
-                System.out.println(PushNotifications.getDeviceInterests());
-
-                if(!user_escalafon.equals("null"))
-                    PushNotifications.addDeviceInterest(user_escalafon);
-
-            }else{
-                PushNotifications.clearDeviceInterests();
-                PushNotifications.addDeviceInterest("noLogin");
-                PushNotifications.addDeviceInterest("general");
-                System.out.println(PushNotifications.getDeviceInterests());
+            @Override
+            public void onFailure(Call<Interest> call, Throwable t) {
+                System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE FAILURE => "+t.getMessage());
             }
-        }
+        });
+    }*/
+    // esto es nuevo
+   /* private void getInterests( ) {
+        Call<List<Interest>> call = interestApi.getInterests();
 
-        @Override
-        public void onPageFinished (WebView view,String url){
-
-            progressBar.setVisibility(View.INVISIBLE);
-            webView.evaluateJavascript("JSON.parse(localStorage.getItem('customer'))", new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                    addInteres(value);
+        call.enqueue(new Callback<List<Interest>>() {
+            @Override
+            public void onResponse(Call<List<Interest>> call, Response<List<Interest>> response) {
+                if(!response.isSuccessful()){
+                    System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
                 }
-            });
-        }
+                List<Interest> interests = response.body();
 
-        @Override
-        public void onPageStarted (WebView view, String url, Bitmap favicon){
+                for (Interest interest : interests ){
+                    System.out.println("ID => "+interest.getId());
+                    System.out.println("NAME => "+interest.getName());
+                    System.out.println("STATUS => "+interest.getStatus());
+                }
+            }
 
-            progressBar.setVisibility(View.VISIBLE);
-        }
-    };
+            @Override
+            public void onFailure(Call<List<Interest>> call, Throwable t) {
+                System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE FAILURE "+t.getMessage());
+            }
+        });
 
-    private class MywebChromeClient extends WebChromeClient {
-        @Override
-        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-            return super.onJsAlert(view, url, message, result);
-        }
     }
-
-
+*/
 
 }

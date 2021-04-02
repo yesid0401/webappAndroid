@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TISSINI APP</string>
     <string name="user_agent_suffix">TISSINIAPP/3.0</string>
+    <string name="instanceId">c5b50bd9-f225-4b64-9352-b9851a952b1f</string>
 </resources>
