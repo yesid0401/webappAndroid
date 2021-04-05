@@ -1,4 +1,6 @@
-package com.tissini.webview;
+package com.tissini.webview.interfaces;
+
+import com.tissini.webview.models.Interest;
 
 import java.util.List;
 
@@ -14,4 +16,6 @@ public interface InterestApi {
 
     @POST("api/interests")
     Call<Interest> createInterest(@Body Interest interest);
+
+
 }

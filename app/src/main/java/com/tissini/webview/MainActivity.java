@@ -40,8 +40,11 @@ import com.google.gson.JsonParser;
 import com.google.firebase.messaging.RemoteMessage;
 import com.pusher.pushnotifications.PushNotificationReceivedListener;
 import com.pusher.pushnotifications.PushNotifications;
+import com.tissini.webview.interfaces.NotificationI;
+import com.tissini.webview.models.Interest;
 import com.tissini.webview.models.MywebChromeClient;
 import com.tissini.webview.models.MywebViewClient;
+import com.tissini.webview.models.Notification;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     //nuevo
    // private InterestApi interestApi ;
+    private NotificationI notificationI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,15 +99,16 @@ public class MainActivity extends AppCompatActivity {
 //        PushNotifications.clearDeviceInterests();
 
         /// nuevo
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("http://192.168.1.5:8000/")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
+ /*       Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.5:8000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 //
 //        interestApi = retrofit.create(InterestApi.class);
        // getInterests();
 
-        // aqui termina lo nuevo
+        notificationI = retrofit.create(NotificationI.class);
+        // aqui termina lo nuevo */
 
         swipeRefreshLayout = findViewById(R.id.swipe);
         progressBar        = (ProgressBar) findViewById(R.id.progressBar);
@@ -113,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         webView.setWebChromeClient(new MywebChromeClient());
-        webView.setWebViewClient(new MywebViewClient(this.progressBar,this.webView,this));
+        webView.setWebViewClient(new MywebViewClient(this.progressBar,this.webView,this,getIntent()));
         webView.addJavascriptInterface(new WebAppInterface(this), "Webview");
 
         loadWebview();
@@ -210,6 +215,8 @@ public class MainActivity extends AppCompatActivity {
         String body = remoteMessage.getNotification().getBody();
         String title = remoteMessage.getNotification().getTitle();
         String link = remoteMessage.getData().get("link");
+        // esto es nuevo
+        String idNotification = remoteMessage.getData().get("idNotification");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
                 .setContentTitle(title)
@@ -223,6 +230,9 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("link",link);
 
+        // esto es nuevo
+        intent.putExtra("idNotification",idNotification);
+
         Random rnd = new Random();
         int num = rnd.nextInt(25);
 
@@ -233,58 +243,4 @@ public class MainActivity extends AppCompatActivity {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
         notificationManagerCompat.notify(NOTIFICATION_ID,builder.build());
     }
-
-
-    // esto es nuevo
-   /* private void createInterest(String user_id,String user_stage ) {
-        Interest interest =  new Interest(user_id,user_stage);
-        Call<Interest> call = interestApi.createInterest(interest);
-
-        call.enqueue(new Callback<Interest>() {
-            @Override
-            public void onResponse(Call<Interest> call, Response<Interest> response) {
-                if(!response.isSuccessful()){
-                    System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
-                }
-
-                Interest interest = response.body();
-
-                System.out.println("user_id => "+interest.getUser_id());
-                System.out.println("stage_id => "+interest.getUser_stage());
-            }
-
-            @Override
-            public void onFailure(Call<Interest> call, Throwable t) {
-                System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE FAILURE => "+t.getMessage());
-            }
-        });
-    }*/
-    // esto es nuevo
-   /* private void getInterests( ) {
-        Call<List<Interest>> call = interestApi.getInterests();
-
-        call.enqueue(new Callback<List<Interest>>() {
-            @Override
-            public void onResponse(Call<List<Interest>> call, Response<List<Interest>> response) {
-                if(!response.isSuccessful()){
-                    System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
-                }
-                List<Interest> interests = response.body();
-
-                for (Interest interest : interests ){
-                    System.out.println("ID => "+interest.getId());
-                    System.out.println("NAME => "+interest.getName());
-                    System.out.println("STATUS => "+interest.getStatus());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Interest>> call, Throwable t) {
-                System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE FAILURE "+t.getMessage());
-            }
-        });
-
-    }
-*/
-
 }
