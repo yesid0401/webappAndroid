@@ -37,12 +37,12 @@ public class MywebViewClient extends WebViewClient {
         this.webView = webView;
         this.activity = activity;
         this.intent = intent;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.2:8000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        notificationI = retrofit.create(NotificationI.class);
-        interestApi = retrofit.create(InterestApi.class);
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("http://192.168.1.2:8000/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//        notificationI = retrofit.create(NotificationI.class);
+//        interestApi = retrofit.create(InterestApi.class);
     }
 
     @Override
@@ -88,13 +88,13 @@ public class MywebViewClient extends WebViewClient {
             // esto es nuevo
             String client_id = user_id;
             String client_stage = user_stage;
-            createInterest(client_id,client_stage);
+          //  createInterest(client_id,client_stage);
 
 
             String idNotification = intent.getStringExtra("idNotification");
             if (idNotification != null){
                 String idClient = user_id;
-                readNotification(idClient,idNotification);
+                //readNotification(idClient,idNotification);
             }
             //aqui termina lo nuevo
 

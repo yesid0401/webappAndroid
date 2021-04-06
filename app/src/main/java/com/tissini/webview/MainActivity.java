@@ -1,6 +1,7 @@
 package com.tissini.webview;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -13,8 +14,10 @@ import android.app.PendingIntent;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.graphics.Bitmap;
 
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -33,6 +36,15 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -65,6 +77,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int REQUEST_APP_UPDATE = 55;
     WebView webView;
     WebSettings webSettings;
     String url = "https://tissini.app";
@@ -73,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     private final static int NOTIFICATION_ID = 0;
     private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private AppUpdateManager appUpdateManager;
 
     //nuevo
    // private InterestApi interestApi ;
@@ -87,6 +101,23 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        // nuevo
+        appUpdateManager = AppUpdateManagerFactory.create(this);
+
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
+           if((appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE)
+                   && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+           ){
+               try {
+                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo,AppUpdateType.IMMEDIATE,this,REQUEST_APP_UPDATE);
+               }catch (IntentSender.SendIntentException e){
+                    e.printStackTrace();
+               }
+           }
+        });
+
+        //hasta aqui
+
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -97,18 +128,6 @@ public class MainActivity extends AppCompatActivity {
 //        PushNotifications.stop();
 //        PushNotifications.removeDeviceInterest("general");
 //        PushNotifications.clearDeviceInterests();
-
-        /// nuevo
- /*       Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.5:8000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-//
-//        interestApi = retrofit.create(InterestApi.class);
-       // getInterests();
-
-        notificationI = retrofit.create(NotificationI.class);
-        // aqui termina lo nuevo */
 
         swipeRefreshLayout = findViewById(R.id.swipe);
         progressBar        = (ProgressBar) findViewById(R.id.progressBar);
@@ -186,8 +205,20 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo ->{
+            if((appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)){
+                try {
+                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo,AppUpdateType.IMMEDIATE,this,REQUEST_APP_UPDATE);
+                }catch (IntentSender.SendIntentException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
         webView.onResume();
         super.onResume();
+
     }
 
     @Override
@@ -221,8 +252,8 @@ public class MainActivity extends AppCompatActivity {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setSmallIcon(R.drawable.ic_launcher_round)
-                .setColor(Color.parseColor("#FF4081"))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setColor(Color.parseColor("#FF4EF2"))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
 
