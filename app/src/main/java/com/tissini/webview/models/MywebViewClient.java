@@ -1,6 +1,7 @@
 package com.tissini.webview.models;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -10,12 +11,17 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.pusher.pushnotifications.PushNotifications;
+import com.tissini.webview.WebAppInterface;
 import com.tissini.webview.interfaces.InterestApi;
+import com.tissini.webview.interfaces.JsonPlaceHolderI;
 import com.tissini.webview.interfaces.NotificationI;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,20 +35,34 @@ public class MywebViewClient extends WebViewClient {
     WebView webView;
     ProgressBar progressBar;
     Intent intent;
+    private Context mContext;
     private NotificationI notificationI;
     private InterestApi interestApi ;
+    private JsonPlaceHolderI jsonPlaceHolderI;
+    public String status;
 
-    public MywebViewClient(ProgressBar progressBar, WebView webView, Activity activity,Intent intent){
+    public MywebViewClient(ProgressBar progressBar, WebView webView, Activity activity,Intent intent,Context mContext){
         this.progressBar = progressBar;
         this.webView = webView;
         this.activity = activity;
         this.intent = intent;
+        this.mContext = mContext;
 //        Retrofit retrofit = new Retrofit.Builder()
 //                .baseUrl("http://192.168.1.2:8000/")
 //                .addConverterFactory(GsonConverterFactory.create())
 //                .build();
 //        notificationI = retrofit.create(NotificationI.class);
 //        interestApi = retrofit.create(InterestApi.class);
+    }
+
+    public MywebViewClient(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://io.tissini.app/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        //notificationI = retrofit.create(NotificationI.class);
+        jsonPlaceHolderI = retrofit.create(JsonPlaceHolderI.class);
+        //interestApi = retrofit.create(InterestApi.class);
     }
 
     @Override
@@ -117,6 +137,10 @@ public class MywebViewClient extends WebViewClient {
     public void onPageFinished (WebView view,String url){
 
         progressBar.setVisibility(View.INVISIBLE);
+        // esto lo tengo quequitar
+        WebAppInterface webAppInterface = new WebAppInterface(this.mContext,webView);
+        webAppInterface.getCart();
+
         webView.evaluateJavascript("JSON.parse(localStorage.getItem('customer'))", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
@@ -131,7 +155,7 @@ public class MywebViewClient extends WebViewClient {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void readNotification(String idClient,String idNotification ) {
+    public void readNotification(String idClient,String idNotification ) {
         Notification notification =  new Notification(idClient,idNotification);
         Call<Notification> call = notificationI.readNotification(notification);
 
@@ -139,18 +163,14 @@ public class MywebViewClient extends WebViewClient {
             @Override
             public void onResponse(Call<Notification> call, Response<Notification> response) {
                 if(!response.isSuccessful()){
-                    System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
+                    System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
                 }
 
-                Notification notification = response.body();
-
-                System.out.println("idClient => "+notification.getIdClient());
-                System.out.println("idNotification => "+notification.getIdNotification());
             }
 
             @Override
             public void onFailure(Call<Notification> call, Throwable t) {
-                System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE FAILURE => "+t.getMessage());
+                System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE FAILURE => "+t.getMessage());
             }
         });
     }
@@ -164,14 +184,64 @@ public class MywebViewClient extends WebViewClient {
             @Override
             public void onResponse(Call<Interest> call, Response<Interest> response) {
                 if(!response.isSuccessful()){
-                    System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
+                    System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
                 }
             }
 
             @Override
             public void onFailure(Call<Interest> call, Throwable t) {
-                System.err.println("XXXXXXXXXXXXXXXXXXXXXXX ERROR AL PROCESAR SOLICITUS DESDE FAILURE => "+t.getMessage());
+                System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE FAILURE => "+t.getMessage());
             }
         });
     }
+
+    /////////////////
+    public String getJsonPlaceHolder(String token ) {
+        Call<JsonPlaceHolder>call = jsonPlaceHolderI.getPost("Bearer "+token);
+        call.enqueue(new Callback<JsonPlaceHolder>() {
+            @Override
+            public void onResponse(Call<JsonPlaceHolder> call, Response<JsonPlaceHolder> response) {
+                if(!response.isSuccessful()){
+                    System.err.println("ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
+                }
+
+                Gson gson = new Gson();
+                String data = gson.toJson(response.body().getShopping_cart());
+                JsonParser parser      = new JsonParser();
+                JsonElement jsonTree   = parser.parse(data);
+                JsonObject jsonObject  = jsonTree.getAsJsonObject();
+                JsonElement Jsonstatus = jsonObject.get("status");
+                status =  Jsonstatus == null ? "yesid": Jsonstatus.toString();
+            }
+            @Override
+            public void onFailure(Call<JsonPlaceHolder> call, Throwable t) {
+                System.err.println("ERROR AL PROCESAR SOLICITUS DESDE FAILURE "+t.getMessage());
+            }
+        });
+
+        return status;
+    }
+
+    public void getInterests( ) {
+        String auth = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJpZGVudGlmaWNhdGlvbiI6IjEwODM0MzQ4OTgiLCJmaXJzdE5hbWUiOiJ5ZXNpZCBlbWlybyAiLCJsYXN0TmFtZSI6InNhbmNoZXogcmFtb3MgIiwiZW1haWwiOiJ5ZXNpZHNAdGlzc2luaS5jb20gIiwidGVsZXBob25lIjoiMzAwNjMxNjE2MCIsInVzZXIiOiJ5ZXNpZDEwMTAiLCJwYXNzd29yZCI6IiQyYiQxMCRlNXcxZUJ3cXB0T01NUGJqdWVwZTgucnkxWk9pRHpPMzRHbHlacXF3NXZvNWFrRjJyRHE3LiIsInN0YXR1cyI6InRydWUiLCJyb2xJZCI6MiwiY3JlYXRlZEF0IjoiMjAyMS0wNC0wM1QyMjoyMzozOC4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wNC0wNlQyMzozMDoxMC4wMDBaIn0sImlhdCI6MTYxNzkwMDA5NywiZXhwIjoxNjE3OTg2NDk3fQ.SYEBs7R6KArYqAEYJda4XysaBsZEknp43ZDqXSvape8";
+        Call<List<Interest>> call = interestApi.getInterests( "Bearer "+auth);
+        call.enqueue(new Callback<List<Interest>>() {
+        @Override
+        public void onResponse(Call<List<Interest>> call, Response<List<Interest>> response) {
+            if(!response.isSuccessful()){
+                System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
+            }
+            List<Interest> interests = response.body();
+            for (Interest interest : interests ){
+                System.out.println("ID => "+interest.getId());
+                System.out.println("NAME => "+interest.getName());
+                System.out.println("STATUS => "+interest.getStatus());
+            }
+        }
+        @Override
+        public void onFailure(Call<List<Interest>> call, Throwable t) {
+            System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE FAILURE "+t.getMessage());
+        }
+    });
+}
 }
