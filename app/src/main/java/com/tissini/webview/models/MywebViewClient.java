@@ -21,6 +21,8 @@ import com.tissini.webview.interfaces.InterestApi;
 import com.tissini.webview.interfaces.JsonPlaceHolderI;
 import com.tissini.webview.interfaces.NotificationI;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import retrofit2.Call;
@@ -206,12 +208,31 @@ public class MywebViewClient extends WebViewClient {
                 }
 
                 Gson gson = new Gson();
-                String data = gson.toJson(response.body().getShopping_cart());
+               String data = gson.toJson(response.body().getShopping_cart());
+
                 JsonParser parser      = new JsonParser();
                 JsonElement jsonTree   = parser.parse(data);
                 JsonObject jsonObject  = jsonTree.getAsJsonObject();
-                JsonElement Jsonstatus = jsonObject.get("status");
-                status =  Jsonstatus == null ? "yesid": Jsonstatus.toString();
+                System.out.println("STATUS => " +  jsonObject.get("status"));
+
+//                Gson gson = new Gson();
+//                String data = gson.toJson(response.body().getShopping_cart());
+//                JsonParser parser      = new JsonParser();
+//                JsonElement jsonTree   = parser.parse(data);
+//                JsonObject jsonObject  = jsonTree.getAsJsonObject();
+
+                //status =  jsonObject.get("status").isJsonNull() ? "null" : jsonObject.get("status").getAsString();
+
+                //System.out.println("status => " + jsonObject.get("status"));
+//
+//                if(!jsonObject.get("status").isJsonNull()){
+//                    status = jsonObject.get("status").getAsString();
+////                    if(status.equals("failed")){
+////                        System.out.println("failed desde wenClient");
+////                    }
+//                }
+
+
             }
             @Override
             public void onFailure(Call<JsonPlaceHolder> call, Throwable t) {

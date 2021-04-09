@@ -18,6 +18,7 @@ public class WebAppInterface {
     Context mContext;
     WebView webView;
     MywebViewClient mywebViewClient;
+    public String status;
     /** Instantiate the interface and set the context */
     public WebAppInterface(Context c,WebView webView) {
         mContext = c;
@@ -41,6 +42,7 @@ public class WebAppInterface {
     public void getCart(){
 
         new Timer().scheduleAtFixedRate(new TimerTask(){
+           // String processing = "processing";
             @Override
             public void run(){
 
@@ -52,17 +54,27 @@ public class WebAppInterface {
                                 @Override
                                 public void onReceiveValue(String value) {
                                     String token  =  (String) value.toString().replaceAll("^[\"']+|[\"']+$", "");
-                                    String status = mywebViewClient.getJsonPlaceHolder(token);
-                                    System.out.println("STATUS => "+status);
-                                    if(status == "null"){
-                                        System.out.println("STATUS => "+status);
-                                    }
-
+                                     status = mywebViewClient.getJsonPlaceHolder(token);
+//
+//                                    if(!status.equals("processing")){
+//
+//                                    }
                                 }
                             });
                         }
+
                     });
+
+                if(status != null){
+//                    if(status.equals("processing")){
+//                        System.out.println( " dentro del if Status == processing  ");
+//                        this.cancel();
+//                    }
+                    System.out.println("STATUS DESDE WEBINTERFACE => " +status);
+                }
+
+
             }
-        },0,20000);
+        },0,5000);
     }
 }
