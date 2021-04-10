@@ -40,41 +40,40 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void getCart(){
+        getToken();
+    }
 
+    public void getToken(){
+        webView.post(new Runnable() {
+            @Override
+            public void run() {
+                webView.evaluateJavascript("localStorage.getItem('token')", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        String token  =  (String) value.toString().replaceAll("^[\"']+|[\"']+$", "");
+                        getcart2(token);
+                    }
+                });
+            }
+
+        });
+    }
+
+
+    public void getcart2(String token){
         new Timer().scheduleAtFixedRate(new TimerTask(){
-           // String processing = "processing";
             @Override
             public void run(){
-
-                //mywebViewClient.readNotification("158966","34");
-                webView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            webView.evaluateJavascript("localStorage.getItem('token')", new ValueCallback<String>() {
-                                @Override
-                                public void onReceiveValue(String value) {
-                                    String token  =  (String) value.toString().replaceAll("^[\"']+|[\"']+$", "");
-                                     status = mywebViewClient.getJsonPlaceHolder(token);
-//
-//                                    if(!status.equals("processing")){
-//
-//                                    }
-                                }
-                            });
-                        }
-
-                    });
-
+                status = mywebViewClient.getJsonPlaceHolder(token);
                 if(status != null){
-//                    if(status.equals("processing")){
-//                        System.out.println( " dentro del if Status == processing  ");
-//                        this.cancel();
-//                    }
-                    System.out.println("STATUS DESDE WEBINTERFACE => " +status);
+
+                    if(!status.equals("processing")){
+                        this.cancel();
+                    }
+
                 }
-
-
+                System.out.println("IMPRIMIENDO DESDE WEBAPPINTERFACE");
             }
-        },0,5000);
+        },1,10000);
     }
 }

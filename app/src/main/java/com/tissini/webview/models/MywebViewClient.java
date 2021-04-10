@@ -21,8 +21,6 @@ import com.tissini.webview.interfaces.InterestApi;
 import com.tissini.webview.interfaces.JsonPlaceHolderI;
 import com.tissini.webview.interfaces.NotificationI;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import retrofit2.Call;
@@ -58,10 +56,12 @@ public class MywebViewClient extends WebViewClient {
     }
 
     public MywebViewClient(){
-        Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit =  new Retrofit.Builder()
                 .baseUrl("https://io.tissini.app/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build()
+
+                ;
         //notificationI = retrofit.create(NotificationI.class);
         jsonPlaceHolderI = retrofit.create(JsonPlaceHolderI.class);
         //interestApi = retrofit.create(InterestApi.class);
@@ -197,49 +197,46 @@ public class MywebViewClient extends WebViewClient {
         });
     }
 
-    /////////////////
+
     public String getJsonPlaceHolder(String token ) {
-        Call<JsonPlaceHolder>call = jsonPlaceHolderI.getPost("Bearer "+token);
-        call.enqueue(new Callback<JsonPlaceHolder>() {
-            @Override
-            public void onResponse(Call<JsonPlaceHolder> call, Response<JsonPlaceHolder> response) {
-                if(!response.isSuccessful()){
-                    System.err.println("ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
+
+        try {
+            Call<JsonPlaceHolder> call = jsonPlaceHolderI.getPost("Bearer " + token);
+            call.enqueue(new Callback<JsonPlaceHolder>() {
+                @Override
+                public void onResponse(Call<JsonPlaceHolder> call, Response<JsonPlaceHolder> response) {
+
+                    if (!response.isSuccessful()) {
+                        System.err.println("ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
+                    }
+
+                    Gson gson = new Gson();
+                    String data = gson.toJson(response.body().getShopping_cart());
+                    System.out.println(data);
+                    JsonParser parser = new JsonParser();
+                    JsonElement jsonTree = parser.parse(data);
+                    JsonObject jsonObject = jsonTree.getAsJsonObject();
+                    JsonElement statusj   = jsonObject.get("status");
+
+                    if(jsonObject.get("status") != null){
+                        status = (String) statusj.getAsString();
+                    }
+
+
                 }
 
-                Gson gson = new Gson();
-               String data = gson.toJson(response.body().getShopping_cart());
+                @Override
+                public void onFailure(Call<JsonPlaceHolder> call, Throwable t) {
+                    System.err.println("ERROR AL PROCESAR SOLICITUS DESDE FAILURE " + t.getMessage());
+                }
+            });
 
-                JsonParser parser      = new JsonParser();
-                JsonElement jsonTree   = parser.parse(data);
-                JsonObject jsonObject  = jsonTree.getAsJsonObject();
-                System.out.println("STATUS => " +  jsonObject.get("status"));
+        }
+        catch (Exception e){
+            System.out.println("Exception => " + e.getMessage());
+        }
 
-//                Gson gson = new Gson();
-//                String data = gson.toJson(response.body().getShopping_cart());
-//                JsonParser parser      = new JsonParser();
-//                JsonElement jsonTree   = parser.parse(data);
-//                JsonObject jsonObject  = jsonTree.getAsJsonObject();
-
-                //status =  jsonObject.get("status").isJsonNull() ? "null" : jsonObject.get("status").getAsString();
-
-                //System.out.println("status => " + jsonObject.get("status"));
-//
-//                if(!jsonObject.get("status").isJsonNull()){
-//                    status = jsonObject.get("status").getAsString();
-////                    if(status.equals("failed")){
-////                        System.out.println("failed desde wenClient");
-////                    }
-//                }
-
-
-            }
-            @Override
-            public void onFailure(Call<JsonPlaceHolder> call, Throwable t) {
-                System.err.println("ERROR AL PROCESAR SOLICITUS DESDE FAILURE "+t.getMessage());
-            }
-        });
-
+        System.out.println("IMPRIMIENDO DESDE MYWEBCLIENT");
         return status;
     }
 

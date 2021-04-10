@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_APP_UPDATE = 55;
     WebView webView;
     WebSettings webSettings;
-    String url = "https://stage.tissini.dev/158966";
+    String url = "https://tissini.app/158966";
     private final static  String CHANEL_ID = "tissini";
     private final static  String CHANEL_ID_NAME = "tissini";
     private final static int NOTIFICATION_ID = 0;
