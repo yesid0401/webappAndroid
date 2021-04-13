@@ -10,6 +10,7 @@ public class MywebChromeClient extends WebChromeClient {
     public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
         return super.onJsAlert(view, url, message, result);
     }
+
 }
 
 

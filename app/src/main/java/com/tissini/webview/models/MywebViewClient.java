@@ -67,6 +67,8 @@ public class MywebViewClient extends WebViewClient {
         //interestApi = retrofit.create(InterestApi.class);
     }
 
+
+
     @Override
     public boolean shouldOverrideUrlLoading(WebView wv, String url) {
         if(url.startsWith("whatsapp:") || url.startsWith("tel:") || url.startsWith("intent://") || url.startsWith("http://")) {
@@ -140,8 +142,8 @@ public class MywebViewClient extends WebViewClient {
 
         progressBar.setVisibility(View.INVISIBLE);
         // esto lo tengo quequitar
-        WebAppInterface webAppInterface = new WebAppInterface(this.mContext,webView);
-        webAppInterface.getCart();
+       // WebAppInterface webAppInterface = new WebAppInterface(this.mContext,webView);
+       // webAppInterface.getCart();
 
         webView.evaluateJavascript("JSON.parse(localStorage.getItem('customer'))", new ValueCallback<String>() {
             @Override
@@ -202,6 +204,7 @@ public class MywebViewClient extends WebViewClient {
 
         try {
             Call<JsonPlaceHolder> call = jsonPlaceHolderI.getPost("Bearer " + token);
+
             call.enqueue(new Callback<JsonPlaceHolder>() {
                 @Override
                 public void onResponse(Call<JsonPlaceHolder> call, Response<JsonPlaceHolder> response) {
@@ -262,4 +265,9 @@ public class MywebViewClient extends WebViewClient {
         }
     });
 }
+
+
+//// PROBANDO LA LOGICA ENN ESTE ARCHIVO///
+
+
 }

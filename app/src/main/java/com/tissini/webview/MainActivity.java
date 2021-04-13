@@ -47,13 +47,15 @@ import com.tissini.webview.interfaces.NotificationI;
 import com.tissini.webview.models.MywebChromeClient;
 import com.tissini.webview.models.MywebViewClient;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_APP_UPDATE = 55;
     WebView webView;
     WebSettings webSettings;
-    String url = "https://tissini.app/158966";
+    String url = "https://stage.tissini.dev/158966";
     private final static  String CHANEL_ID = "tissini";
     private final static  String CHANEL_ID_NAME = "tissini";
     private final static int NOTIFICATION_ID = 0;
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onRefresh() {
                         webView.reload();
                         swipeRefreshLayout.setRefreshing(false);
+
                     }
                 }
         );
@@ -139,13 +142,14 @@ public class MainActivity extends AppCompatActivity {
         webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
-        webSettings.setDatabaseEnabled(true);
+        webSettings.setDatabaseEnabled(false);
 
-        webSettings.setAppCacheMaxSize(5 * 1024 * 1024); // 5MB
-        webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        webSettings.setAllowFileAccess(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
+//        webSettings.setAppCacheMaxSize(5 * 1024 * 1024); // 5MB
+//        webSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
+//        webSettings.setAllowFileAccess(true);
+        webSettings.setAppCacheEnabled(false);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE  );
         webSettings.setUserAgentString(webSettings.getUserAgentString()+ " " + getString(R.string.user_agent_suffix));
 
         Uri appLinkData = getIntent().getData();
@@ -156,7 +160,11 @@ public class MainActivity extends AppCompatActivity {
         if (link != null)
             this.url = link;
 
-        webView.loadUrl(this.url);
+        Map<String, String> noCacheHeaders = new HashMap<String, String>(2);
+        noCacheHeaders.put("Cache-Control", "no-cache");
+        noCacheHeaders.put("Cache-Control", "no-store");
+
+        webView.loadUrl(this.url,noCacheHeaders);
     }
 
     public static boolean isOnline(Context context) {

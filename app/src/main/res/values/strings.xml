@@ -2,4 +2,6 @@
     <string name="app_name">TISSINI APP</string>
     <string name="user_agent_suffix">TISSINIAPP/3.0</string>
     <string name="instanceId">c5b50bd9-f225-4b64-9352-b9851a952b1f</string>
+    <string name="stage_tissini">https://stage.tissini.dev/</string>
+    <string name="production_tissini">https://tissini.app/</string>
 </resources>
