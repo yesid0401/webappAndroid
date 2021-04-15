@@ -17,7 +17,8 @@ public class InAppUdate {
         this.activity = activity;
     }
 
-    public void getAppUdate(){
+    public void CheckAppUpdate(){
+
         appUpdateManager = AppUpdateManagerFactory.create(this.activity);
 
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
@@ -25,7 +26,8 @@ public class InAppUdate {
                     && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
             ){
                 try {
-                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo,AppUpdateType.IMMEDIATE,this.activity,REQUEST_APP_UPDATE);
+                 appUpdateManager.startUpdateFlowForResult(appUpdateInfo,AppUpdateType.IMMEDIATE,this.activity,REQUEST_APP_UPDATE);
+
                 }catch (IntentSender.SendIntentException e){
                     e.printStackTrace();
                 }

@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 
 public interface InterestApi {
 
-    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @Headers({ "Content-Type: application/json;charset=UTF-8","Cache-Control: no-cache","Cache-Control: no-store"})
     @GET("api/interests/all/false")
     Call<List<Interest>> getInterests(@Header("Authorization") String auth);
 
