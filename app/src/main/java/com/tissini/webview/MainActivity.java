@@ -3,6 +3,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -35,10 +37,10 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     WebView webView;
     WebSettings webSettings;
-    String url = "https://tissini.app/";
+    String url = "https://stage.tissini.dev/ebL0EI";
     private final static  String CHANEL_ID = "tissini";
     private final static  String CHANEL_ID_NAME = "tissini";
-    private final static int NOTIFICATION_ID = 0;
+    private  static int NOTIFICATION_ID = 0;
     private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebChromeClient(new MyWebChromClientClass());
         webView.setWebViewClient(new MywebViewClient(this.progressBar,this.webView,this,getIntent()));
-        webView.addJavascriptInterface(new WebAppInterface(this), "Webview");
+        webView.addJavascriptInterface(new WebAppInterface(this,this), "Webview");
         loadWebview();
         onRefresh();
     }
@@ -180,32 +182,46 @@ public class MainActivity extends AppCompatActivity {
     public void CreateNotification(RemoteMessage remoteMessage){
 
         String body = remoteMessage.getNotification().getBody();
+      //  String body = remoteMessage.getData().get("body");
         String title = remoteMessage.getNotification().getTitle();
+      //  String title = remoteMessage.getData().get("title");
         String link = remoteMessage.getData().get("link");
-        // esto es nuevo
         String idNotification = remoteMessage.getData().get("idNotification");
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
-                .setContentTitle(title)
-                .setContentText(body)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setColor(Color.parseColor("#FF4EF2"))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true);
+        String GROUP_KEY_WORK_EMAIL = "com.tissini.app";
+
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setColor(Color.parseColor("#FF4EF2"))
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .setAutoCancel(true);
+
+        NotificationCompat.Builder summaryNotification =new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setColor(Color.parseColor("#FF4EF2"))
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .setGroupSummary(true)
+                        .setAutoCancel(true);
 
         Intent intent = new Intent(MainActivity.this,MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("link",link);
         intent.putExtra("idNotification",idNotification);
 
-        Random rnd = new Random();
-        int num = rnd.nextInt(25);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this,num,intent,PendingIntent.FLAG_ONE_SHOT);
-        builder.setContentIntent(pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, Integer.parseInt(idNotification),intent,PendingIntent.FLAG_ONE_SHOT);
+        notification.setContentIntent(pendingIntent);
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
-        notificationManagerCompat.notify(NOTIFICATION_ID,builder.build());
+        notificationManagerCompat.notify(Integer.parseInt(idNotification),notification.build());
+        notificationManagerCompat.notify(0,summaryNotification.build());
+
     }
+
+
 
 
     public class MyWebChromClientClass extends WebChromeClient {
