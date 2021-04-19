@@ -85,13 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        PushNotifications.setOnMessageReceivedListenerForVisibleActivity(this, new PushNotificationReceivedListener() {
-            @Override
-            public void onMessageReceived(RemoteMessage remoteMessage) {
-                createNotificationChanel();
-                CreateNotification(remoteMessage);
-            }
-        });
         webView.onResume();
         super.onResume();
     }
@@ -102,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
             webView.goBack();
         }else{
             super.onBackPressed();
-
         }
     }
     @Override
@@ -181,10 +173,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void CreateNotification(RemoteMessage remoteMessage){
 
-        String body = remoteMessage.getNotification().getBody();
-      //  String body = remoteMessage.getData().get("body");
-        String title = remoteMessage.getNotification().getTitle();
-      //  String title = remoteMessage.getData().get("title");
+     //  String body = remoteMessage.getNotification().getBody();
+        String body = remoteMessage.getData().get("body");
+       // String title = remoteMessage.getNotification().getTitle();
+        String title = remoteMessage.getData().get("title");
         String link = remoteMessage.getData().get("link");
         String idNotification = remoteMessage.getData().get("idNotification");
 
