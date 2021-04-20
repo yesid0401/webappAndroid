@@ -1,18 +1,19 @@
-package com.tissini.webview;
+package com.tissini.webview.webViewHelpers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.webkit.JavascriptInterface;
 
+import com.tissini.webview.BuildConfig;
+
 
 public class WebAppInterface {
     Context mContext;
-    Activity activity;
+
     /** Instantiate the interface and set the context */
-    public WebAppInterface(Context c,Activity a) {
+    public WebAppInterface(Context c) {
         mContext = c;
-        this.activity = a;
     }
 
     /** Show a toast from the web page */
@@ -28,17 +29,11 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public void closeApp(){
-        this.activity.finish();
-    }
-
-    @JavascriptInterface
     public void  updateApp(){
-        System.out.println("VAMOS ACTUALIZAR");
         try{
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.tissini.webview"));
-            this.activity.startActivity(intent);
+            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+ BuildConfig.APPLICATION_ID));
+            mContext.startActivity(intent);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

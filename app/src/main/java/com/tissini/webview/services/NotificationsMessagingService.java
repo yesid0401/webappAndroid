@@ -1,4 +1,4 @@
-package com.tissini.webview;
+package com.tissini.webview.services;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -15,6 +15,8 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.pusher.pushnotifications.fcm.MessagingService;
+import com.tissini.webview.MainActivity;
+import com.tissini.webview.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,10 +56,10 @@ public class NotificationsMessagingService extends MessagingService {
                 .setContentTitle(title)
                 .setContentText(body)
                 .setColor(Color.parseColor("#FF4EF2"))
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
-                .setStyle(new NotificationCompat.BigPictureStyle()
-                .bigPicture(img)
-                .bigLargeIcon(null))
+                .setLargeIcon(img)
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
+//                .setStyle(new NotificationCompat.BigTextStyle()
+//                .bigText(body))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setGroup(GROUP_KEY_WORK_EMAIL)
                 .setAutoCancel(true);
@@ -71,7 +73,7 @@ public class NotificationsMessagingService extends MessagingService {
                 .setGroupSummary(true)
                 .setAutoCancel(true);
 
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("link",link);
         intent.putExtra("idNotification",idNotification);
