@@ -43,14 +43,14 @@ public class NotificationsMessagingService extends MessagingService {
     }
 
     public void CreateNotification(RemoteMessage remoteMessage){
-
-        String body = remoteMessage.getData().get("body");
-        String title = remoteMessage.getData().get("title");
-        String link = remoteMessage.getData().get("link");
+        String body           = remoteMessage.getData().get("body");
+        String title          = remoteMessage.getData().get("title");
+        String link           = remoteMessage.getData().get("link");
         String idNotification = remoteMessage.getData().get("idNotification");
 
         String GROUP_KEY_WORK_EMAIL = "com.tissini.app/notifications";
         Bitmap img = getBitmapFromURL("https://io.tissini.app/img/categories/textiles-ropa-interior-panties.png");
+
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
@@ -58,8 +58,6 @@ public class NotificationsMessagingService extends MessagingService {
                 .setColor(Color.parseColor("#FF4EF2"))
                 .setLargeIcon(img)
                 .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
-//                .setStyle(new NotificationCompat.BigTextStyle()
-//                .bigText(body))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setGroup(GROUP_KEY_WORK_EMAIL)
                 .setAutoCancel(true);

@@ -23,18 +23,22 @@ public class Webview {
     public WebSettings webSettings;
     public ProgressBar progressBar;
     public SwipeRefreshLayout swipeRefreshLayout;
+    public Intent intent;
 
-    public Webview(Activity activity){
-        this.activity = activity;
-        this.webView = (WebView) activity.findViewById(R.id.webview);
-        this.progressBar = (ProgressBar) activity.findViewById(R.id.progressBar);
-        this.webSettings = this.webView.getSettings();
+    public Webview(Activity activity,Intent intent){
+        this.activity           = activity;
+        this.webView            = (WebView) activity.findViewById(R.id.webview);
+        this.progressBar        = (ProgressBar) activity.findViewById(R.id.progressBar);
         this.swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe);
+        this.intent             = intent;
+        this.webSettings        = this.webView.getSettings();
+
+        this.webView.setWebViewClient(new MywebViewClient(this.progressBar,this.webView,this.activity,intent));
+        this.webView.addJavascriptInterface(new WebAppInterface(activity), "Webview");
         onRefresh();
     }
 
     public void webSettings(){
-        webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(false);
@@ -43,11 +47,7 @@ public class Webview {
         webSettings.setUserAgentString(webSettings.getUserAgentString()+ " " + this.activity.getString(R.string.user_agent_suffix));
     }
 
-    public void loadUrl(Intent intent, String url){
-
-        webView.setWebChromeClient(new MywebChromeClient(activity));
-        webView.setWebViewClient(new MywebViewClient(this.progressBar,this.webView,this.activity,intent));
-        webView.addJavascriptInterface(new WebAppInterface(activity), "Webview");
+    public void loadUrl(String url){
         webSettings();
 
         Uri appLinkData = intent.getData();
@@ -83,6 +83,10 @@ public class Webview {
             return true;
         }
         return false;
+     }
+
+     public void onResume(){
+        webView.onResume();
      }
      
 }

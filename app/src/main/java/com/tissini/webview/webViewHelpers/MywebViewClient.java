@@ -10,22 +10,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.pusher.pushnotifications.PushNotifications;
-import com.tissini.webview.BuildConfig;
-import com.tissini.webview.interfaces.VersionI;
-import com.tissini.webview.models.Version;
+import com.tissini.webview.controllers.VersionController;
+import com.tissini.webview.helpers.PushNotificationsH;
 import com.tissini.webview.services.VersionServices;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 
 public class MywebViewClient extends WebViewClient {
 
@@ -33,14 +20,14 @@ public class MywebViewClient extends WebViewClient {
     WebView webView;
     ProgressBar progressBar;
     Intent intent;
-    VersionServices versionServices;
+    VersionController versionController;
 
     public MywebViewClient(ProgressBar progressBar, WebView webView, Activity activity,Intent intent){
         this.progressBar = progressBar;
         this.webView = webView;
         this.activity = activity;
         this.intent = intent;
-        this.versionServices  = new VersionServices();
+        this.versionController  = new VersionController(this.webView);
 
     }
 
@@ -71,11 +58,11 @@ public class MywebViewClient extends WebViewClient {
     public void onPageFinished (WebView view,String url){
 
         progressBar.setVisibility(View.INVISIBLE);
-        versionServices.getVersion(webView);
+        versionController.getVerion();
         webView.evaluateJavascript("JSON.parse(localStorage.getItem('customer'))", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                addInteres(value);
+                PushNotificationsH.addInterest(value);
             }
         });
     }
@@ -83,42 +70,5 @@ public class MywebViewClient extends WebViewClient {
     @Override
     public void onPageStarted (WebView view, String url, Bitmap favicon){
         progressBar.setVisibility(View.VISIBLE);
-    }
-
-    /// Methods
-
-    public void addInteres(String value){
-        if(!value.equals("null")){
-            JsonParser parser    = new JsonParser();
-            JsonElement jsonTree = parser.parse(value);
-
-            JsonObject jsonObject = jsonTree.getAsJsonObject();
-            JsonElement id        = jsonObject.get("id");
-            JsonElement stage     = jsonObject.get("stage");
-            JsonElement elite     = jsonObject.get("elite");
-
-            JsonElement jsonTree2  = parser.parse(String.valueOf(elite));
-            JsonObject jsonObject2 = jsonTree2.getAsJsonObject();
-            JsonElement escalafon  = jsonObject2.get("escalafon");
-
-            String user_id         = (String) id.toString();
-            String user_stage      = (String) stage.toString().replaceAll("^[\"']+|[\"']+$", "");
-            String user_escalafon  = (String) escalafon.toString();
-
-            PushNotifications.addDeviceInterest("general");
-            PushNotifications.addDeviceInterest(user_id);
-            PushNotifications.addDeviceInterest("Login");
-            PushNotifications.addDeviceInterest(user_stage);
-            PushNotifications.removeDeviceInterest("noLogin");
-
-            System.out.println(PushNotifications.getDeviceInterests());
-
-            if(!user_escalafon.equals("null"))
-                PushNotifications.addDeviceInterest(user_escalafon);
-        }else{
-            PushNotifications.clearDeviceInterests();
-            PushNotifications.addDeviceInterest("noLogin");
-            System.out.println(PushNotifications.getDeviceInterests());
-        }
     }
 }
