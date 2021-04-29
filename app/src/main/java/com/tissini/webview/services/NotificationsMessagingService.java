@@ -49,15 +49,16 @@ public class NotificationsMessagingService extends MessagingService {
         String idNotification = remoteMessage.getData().get("idNotification");
 
         String GROUP_KEY_WORK_EMAIL = "com.tissini.app/notifications";
-        Bitmap img = getBitmapFromURL("https://io.tissini.app/img/categories/textiles-ropa-interior-panties.png");
+      //  Bitmap img = getBitmapFromURL("https://io.tissini.app/img/categories/textiles-ropa-interior-panties.png");
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setColor(Color.parseColor("#FF4EF2"))
-                .setLargeIcon(img)
-                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
+                //.setLargeIcon(img)
+                //.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setGroup(GROUP_KEY_WORK_EMAIL)
                 .setAutoCancel(true);
@@ -82,20 +83,5 @@ public class NotificationsMessagingService extends MessagingService {
         notificationManagerCompat.notify(Integer.parseInt(idNotification),notification.build());
         notificationManagerCompat.notify(0,summaryNotification.build());
 
-    }
-
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            // Log exception
-            return null;
-        }
     }
 }

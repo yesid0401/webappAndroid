@@ -18,7 +18,7 @@ import com.tissini.webview.webViewHelpers.Webview;
 
 public class MainActivity extends AppCompatActivity {
     Webview webview;
-    String url = "https://stage.tissini.dev/158966";
+    String url = "https://tissini.app/";
     private ValueCallback<Uri> mUploadMessage;
     public ValueCallback<Uri[]> uploadMessage;
     public static final int REQUEST_SELECT_FILE = 100;
