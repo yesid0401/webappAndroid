@@ -14,6 +14,8 @@ import com.tissini.webview.helpers.BitmapH;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class WebAppInterface {
     Context mContext;
@@ -34,7 +36,11 @@ public class WebAppInterface {
 
     }
 
-
+    /**
+        title  : image name
+        url    : image link
+        option : option to perform => share o download
+     **/
     @JavascriptInterface
     public void optionImage(String title,String url,String option) throws IOException {
 
@@ -63,6 +69,22 @@ public class WebAppInterface {
         }
     }
 
+    @JavascriptInterface
+    public void shareWhatsApp(String number,String body) throws UnsupportedEncodingException {
+        number = "+"+number;
+        String url = "https://api.whatsapp.com/send?phone="+ number +"&text=" + URLEncoder.encode(body, "UTF-8");
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setPackage("com.whatsapp");
+        i.setData(Uri.parse(url));
+        mContext.startActivity(i);
+    }
+
+    //METHODS
+
+    /**
+        img   : image to share
+        title : image name
+     **/
     public void shareImage(Bitmap img,String title) throws IOException {
         File file = new File(mContext.getExternalCacheDir(), "Compartir "+title);
         FileOutputStream fOut = new FileOutputStream(file);
@@ -78,6 +100,10 @@ public class WebAppInterface {
 
     }
 
+    /**
+      url  : image link
+     title : image name
+     **/
     public void downloadImage(String url,String title){
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);

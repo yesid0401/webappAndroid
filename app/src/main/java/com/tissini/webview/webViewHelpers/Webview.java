@@ -22,20 +22,20 @@ public class Webview {
     public Activity activity;
     public WebSettings webSettings;
     public ProgressBar progressBar;
-    public SwipeRefreshLayout swipeRefreshLayout;
+    //public SwipeRefreshLayout swipeRefreshLayout;
     public Intent intent;
 
     public Webview(Activity activity,Intent intent){
         this.activity           = activity;
         this.webView            = (WebView) activity.findViewById(R.id.webview);
         this.progressBar        = (ProgressBar) activity.findViewById(R.id.progressBar);
-        this.swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe);
+        //this.swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe);
         this.intent             = intent;
         this.webSettings        = this.webView.getSettings();
 
         this.webView.setWebViewClient(new MywebViewClient(this.progressBar,this.webView,this.activity,intent));
         this.webView.addJavascriptInterface(new WebAppInterface(activity), "Webview");
-        onRefresh();
+        //onRefresh();
     }
 
     public void webSettings(){
@@ -65,17 +65,17 @@ public class Webview {
         webView.loadUrl(url,noCacheHeaders);
     }
 
-    public  void onRefresh(){
-        swipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        webView.reload();
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }
-        );
-    }
+//    public  void onRefresh(){
+//        swipeRefreshLayout.setOnRefreshListener(
+//                new SwipeRefreshLayout.OnRefreshListener() {
+//                    @Override
+//                    public void onRefresh() {
+//                        webView.reload();
+//                        swipeRefreshLayout.setRefreshing(false);
+//                    }
+//                }
+//        );
+//    }
 
     public boolean goBack(){
         if(webView.canGoBack()){
