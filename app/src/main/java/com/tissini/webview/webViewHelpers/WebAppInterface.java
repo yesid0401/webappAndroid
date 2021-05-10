@@ -1,14 +1,21 @@
 package com.tissini.webview.webViewHelpers;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+
 import com.tissini.webview.BuildConfig;
 import com.tissini.webview.helpers.BitmapH;
 import java.io.File;
@@ -17,8 +24,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import static androidx.core.content.ContextCompat.checkSelfPermission;
+
 public class WebAppInterface {
     Context mContext;
+    private static final int STORAGE_PERMISSION = 1000;
+    private String [] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     /** Instantiate the interface and set the context */
     public WebAppInterface(Context c) {
         mContext = c;
@@ -43,7 +54,6 @@ public class WebAppInterface {
      **/
     @JavascriptInterface
     public void optionImage(String title,String url,String option) throws IOException {
-
         if(option.equals("share")){
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -104,17 +114,26 @@ public class WebAppInterface {
       url  : image link
      title : image name
      **/
-    public void downloadImage(String url,String title){
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-            request.setTitle(title);
-            request.setDescription("tissini.app");
-            request.allowScanningByMediaScanner();
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES,"TISSINI/"+title);
-            DownloadManager manager = (DownloadManager) mContext.getSystemService(mContext.DOWNLOAD_SERVICE);
-            manager.enqueue(request);
+    public void downloadImage(String url,String title) {
 
-            Toast.makeText(mContext,"Descarga finalizada",Toast.LENGTH_LONG).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (mContext.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                request.setTitle(title);
+                request.setDescription("tissini.app");
+                request.allowScanningByMediaScanner();
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, "TISSINI/" + title);
+                DownloadManager manager = (DownloadManager) mContext.getSystemService(mContext.DOWNLOAD_SERVICE);
+                manager.enqueue(request);
+
+                Toast.makeText(mContext, "Iniciando descarga", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Descarga finalizada", Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions((Activity) mContext, permissions, STORAGE_PERMISSION);
+            }
+
+        }
     }
 
 

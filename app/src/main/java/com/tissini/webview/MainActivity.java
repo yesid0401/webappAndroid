@@ -1,8 +1,12 @@
 package com.tissini.webview;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,6 +18,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Toast;
 import com.pusher.pushnotifications.PushNotifications;
+import com.tissini.webview.webViewHelpers.WebAppInterface;
 import com.tissini.webview.webViewHelpers.Webview;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public ValueCallback<Uri[]> uploadMessage;
     public static final int REQUEST_SELECT_FILE = 100;
     private final static int FILECHOOSER_RESULTCODE = 1;
-
+    private String [] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(!isOnline(this)){
@@ -40,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
         webview = new Webview(this,getIntent());
         webview.webView.setWebChromeClient(new MyWebChromClientClass());
         webview.loadUrl(this.url);
-
     }
+
+
 
     @Override
     protected void onPause() {
@@ -65,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+        System.out.println("resultCode = > " + resultCode);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (requestCode == REQUEST_SELECT_FILE) {
                 if (uploadMessage == null)
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public static boolean isOnline(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -91,10 +99,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public  class MyWebChromClientClass extends WebChromeClient {
-
         @Override
         public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
             return super.onJsAlert(view, url, message, result);
+
+
         }
 
         // For Lollipop 5.0+ Devices

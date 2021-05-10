@@ -9,9 +9,11 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
+import androidx.core.app.ActivityCompat;
+
 public class MywebChromeClient extends WebChromeClient  {
     public ValueCallback<Uri> mUploadMessage;
-    public ValueCallback<Uri[]> uploadMessage;
+    public static ValueCallback<Uri[]> uploadMessage;
     public static final int REQUEST_SELECT_FILE = 100;
     public final static int FILECHOOSER_RESULTCODE = 1;
     Activity a;
@@ -35,14 +37,14 @@ public class MywebChromeClient extends WebChromeClient  {
         }
 
         uploadMessage = filePathCallback;
-
+        System.out.println("uploadMessage  DESEDE WEBCHROM=> XXXX "+uploadMessage);
         Intent intent = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             intent = fileChooserParams.createIntent();
         }
         try
         {
-            a.startActivityForResult(intent, REQUEST_SELECT_FILE);
+            ActivityCompat.startActivityForResult(a,intent, REQUEST_SELECT_FILE,null);
         } catch (ActivityNotFoundException e)
         {
             uploadMessage = null;
@@ -50,6 +52,8 @@ public class MywebChromeClient extends WebChromeClient  {
         }
         return true;
     }
+
+
 
 }
 

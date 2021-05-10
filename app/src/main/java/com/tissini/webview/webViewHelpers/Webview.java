@@ -33,6 +33,7 @@ public class Webview {
         this.intent             = intent;
         this.webSettings        = this.webView.getSettings();
 
+       // this.webView.setWebChromeClient(new MywebChromeClient(this.activity));
         this.webView.setWebViewClient(new MywebViewClient(this.progressBar,this.webView,this.activity,intent));
         this.webView.addJavascriptInterface(new WebAppInterface(activity), "Webview");
         //onRefresh();
