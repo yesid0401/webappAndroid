@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 
 import com.tissini.webview.controllers.VersionController;
 import com.tissini.webview.helpers.PushNotificationsH;
-import com.tissini.webview.services.VersionServices;
 
 public class MywebViewClient extends WebViewClient {
 
@@ -28,7 +27,7 @@ public class MywebViewClient extends WebViewClient {
         this.activity = activity;
         this.intent = intent;
         this.versionController  = new VersionController(this.webView);
-
+        PushNotificationsH.intent = intent;
     }
 
     @Override

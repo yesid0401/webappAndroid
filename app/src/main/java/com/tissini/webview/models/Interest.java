@@ -1,9 +1,6 @@
 package com.tissini.webview.models;
 
 public class Interest {
-    private int id;
-    private String name;
-    private String status;
     private String client_id;
     private String client_stage;
 
@@ -28,30 +25,5 @@ public class Interest {
     public void setUser_stage(String user_stage) {
         this.client_stage = user_stage;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
 
 }

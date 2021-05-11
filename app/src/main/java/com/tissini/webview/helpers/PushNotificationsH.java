@@ -1,11 +1,19 @@
 package com.tissini.webview.helpers;
 
+import android.content.Intent;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.pusher.pushnotifications.PushNotifications;
 
+import static com.tissini.webview.controllers.InterestController.createInterest;
+import static com.tissini.webview.controllers.NotificationController.readNotification;
+
 public class PushNotificationsH {
+
+   public static Intent intent;
+
 
 
     public static void addInterest(String value){
@@ -16,12 +24,24 @@ public class PushNotificationsH {
             String user_id         = values[0];
             String user_stage      = values[1];
             String user_escalafon  = values[2];
-
+            PushNotifications.clearDeviceInterests();
             PushNotifications.addDeviceInterest("general");
             PushNotifications.addDeviceInterest(user_id);
             PushNotifications.addDeviceInterest("Login");
             PushNotifications.addDeviceInterest(user_stage);
             PushNotifications.removeDeviceInterest("noLogin");
+
+            String client_id = user_id;
+            String client_stage = user_stage;
+            createInterest(client_id,client_stage);
+
+            String idNotification = intent.getStringExtra("idNotification");
+
+            System.out.println("NOTIFICATION => "+idNotification);
+            if (idNotification != null){
+                String idClient = user_id;
+                readNotification(idClient,idNotification);
+            }
 
             System.out.println(PushNotifications.getDeviceInterests());
 
