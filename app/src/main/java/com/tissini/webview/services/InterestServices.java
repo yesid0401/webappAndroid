@@ -15,14 +15,14 @@ public class InterestServices {
 
     public InterestServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.14:8000/")
+                .baseUrl("https://backendnotifications.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interestI = retrofit.create(InterestI.class);
     }
 
-    public void createInterest(String client_id,String client_stage ) {
-        Interest interest =  new Interest(client_id,client_stage);
+    public void createInterest(String client_id,String client_stage,String client_name ) {
+        Interest interest =  new Interest(client_id,client_stage,client_name);
         Call<Interest> call = interestI.createInterest(interest);
 
         call.enqueue(new Callback<Interest>() {

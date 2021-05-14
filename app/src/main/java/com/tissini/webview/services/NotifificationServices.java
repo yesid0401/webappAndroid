@@ -15,7 +15,7 @@ public class NotifificationServices {
 
     public NotifificationServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.14:8000/")
+                .baseUrl("https://backendnotifications.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         notificationI = retrofit.create(NotificationI.class);

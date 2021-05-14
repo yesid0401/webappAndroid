@@ -24,6 +24,8 @@ public class PushNotificationsH {
             String user_id         = values[0];
             String user_stage      = values[1];
             String user_escalafon  = values[2];
+            String user_name       = values[3];
+
             PushNotifications.clearDeviceInterests();
             PushNotifications.addDeviceInterest("general");
             PushNotifications.addDeviceInterest(user_id);
@@ -33,7 +35,9 @@ public class PushNotificationsH {
 
             String client_id = user_id;
             String client_stage = user_stage;
-            createInterest(client_id,client_stage);
+            String client_name = user_name;
+
+            createInterest(client_id,client_stage,client_name);
 
             String idNotification = intent.getStringExtra("idNotification");
 
@@ -62,6 +66,7 @@ public class PushNotificationsH {
 
         JsonObject jsonObject = jsonTree.getAsJsonObject();
         JsonElement id        = jsonObject.get("id");
+        JsonElement name      = jsonObject.get("name");
         JsonElement stage     = jsonObject.get("stage");
         JsonElement elite     = jsonObject.get("elite");
 
@@ -70,14 +75,16 @@ public class PushNotificationsH {
         JsonElement escalafon  = jsonObject2.get("escalafon");
 
         String user_id         = (String) id.toString();
+        String user_name       = (String) name.toString().replaceAll("^[\"']+|[\"']+$", "");
         String user_stage      = (String) stage.toString().replaceAll("^[\"']+|[\"']+$", "");
         String user_escalafon  = (String) escalafon.toString();
 
-        String[] values = new String[3];
+        String[] values = new String[4];
 
         values[0] = user_id;
         values[1] = user_stage;
         values[2] = user_escalafon;
+        values[3] = user_name;
 
         return values;
     }
