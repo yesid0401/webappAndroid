@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.tissini.webview.BuildConfig;
 import com.tissini.webview.MainActivity;
 import com.tissini.webview.R;
 
@@ -45,7 +46,7 @@ public class Webview {
         webSettings.setDatabaseEnabled(false);
         webSettings.setAppCacheEnabled(false);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE  );
-        webSettings.setUserAgentString(webSettings.getUserAgentString()+ " " + this.activity.getString(R.string.user_agent_suffix));
+        webSettings.setUserAgentString(webSettings.getUserAgentString()+ " " + this.activity.getString(R.string.user_agent_suffix) + "" + BuildConfig.VERSION_NAME);
     }
 
     public void loadUrl(String url){
