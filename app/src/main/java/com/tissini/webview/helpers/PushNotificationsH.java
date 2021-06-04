@@ -31,13 +31,14 @@ public class PushNotificationsH {
             PushNotifications.addDeviceInterest(user_id);
             PushNotifications.addDeviceInterest("Login");
             PushNotifications.addDeviceInterest(user_stage);
+            PushNotifications.addDeviceInterest("Android");
             PushNotifications.removeDeviceInterest("noLogin");
 
             String client_id = user_id;
             String client_stage = user_stage;
             String client_name = user_name;
 
-            createInterest(client_id,client_stage,client_name);
+            createInterest(client_id,client_stage,client_name,"Android");
 
             String idNotification = intent.getStringExtra("idNotification");
 

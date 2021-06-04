@@ -21,8 +21,8 @@ public class InterestServices {
         interestI = retrofit.create(InterestI.class);
     }
 
-    public void createInterest(String client_id,String client_stage,String client_name ) {
-        Interest interest =  new Interest(client_id,client_stage,client_name);
+    public void createInterest(String client_id,String client_stage,String client_name, String client_platform ) {
+        Interest interest =  new Interest(client_id,client_stage,client_name,client_platform);
         Call<Interest> call = interestI.createInterest(interest);
 
         call.enqueue(new Callback<Interest>() {
