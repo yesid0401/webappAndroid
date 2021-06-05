@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,19 @@ public class MainActivity extends AppCompatActivity {
     private String [] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(getIntent().getAction().equals("updateAppInPlayStore")) {
+                NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancel(0);
+            try{
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+ BuildConfig.APPLICATION_ID));
+                startActivity(intent);
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+
         if(!isOnline(this)){
             Toast toast = Toast.makeText(this, "Conectese a una red con internet", Toast.LENGTH_LONG);
             toast.show();
@@ -43,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
         getSupportActionBar().hide();
-
         webview = new Webview(this,getIntent());
         webview.webView.setWebChromeClient(new MyWebChromClientClass());
         webview.loadUrl(this.url);
