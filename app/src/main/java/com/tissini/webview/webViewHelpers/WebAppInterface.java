@@ -165,7 +165,7 @@ public class WebAppInterface {
     public  void NotificationUpdate(){
         Bitmap img = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.update);
         Intent intent = new Intent(mContext, MainActivity.class);
-        intent.setAction("updateAppInPlayStore");
+        intent.putExtra("updateAppInPlayStore","updateAppInPlayStore");
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,1,intent,PendingIntent.FLAG_CANCEL_CURRENT);
         String message ="Presiona en el botón Actualizar para que disfrutes de nuevas y mejores experiencias";
 

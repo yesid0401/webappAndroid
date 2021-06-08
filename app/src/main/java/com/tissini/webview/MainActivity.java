@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if(getIntent().getAction().equals("updateAppInPlayStore")) {
+        String updateAppInPlayStore = getIntent().getStringExtra("updateAppInPlayStore");
+        if(updateAppInPlayStore != null) {
                 NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 manager.cancel(0);
             try{
@@ -117,8 +118,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
             return super.onJsAlert(view, url, message, result);
-
-
         }
 
         // For Lollipop 5.0+ Devices

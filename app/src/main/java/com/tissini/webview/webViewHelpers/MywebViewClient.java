@@ -37,7 +37,8 @@ public class MywebViewClient extends WebViewClient {
                 url.startsWith("intent://") ||
                 url.startsWith("http://") ||
                 url.startsWith("https://io.tissini.app") ||
-                url.startsWith("https://stage.tissini.app")) {
+                url.startsWith("https://stage.tissini.app") ||
+                url.startsWith("https://tissini.com/blog/")){
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));

@@ -38,15 +38,14 @@ public class PushNotificationsH {
             String client_stage = user_stage;
             String client_name = user_name;
 
-            createInterest(client_id,client_stage,client_name,"Android");
+//            createInterest(client_id,client_stage,client_name,"Android");
 
-            String idNotification = intent.getStringExtra("idNotification");
-
-            System.out.println("NOTIFICATION => "+idNotification);
-            if (idNotification != null){
-                String idClient = user_id;
-                readNotification(idClient,idNotification);
-            }
+//            String idNotification = intent.getStringExtra("idNotification");
+//
+//            if (idNotification != null){
+//                String idClient = user_id;
+//                readNotification(idClient,idNotification);
+//            }
 
             System.out.println(PushNotifications.getDeviceInterests());
 
