@@ -69,6 +69,11 @@ public class WebAppInterface {
      **/
     @JavascriptInterface
     public void optionImage(String title,String url,String option) throws IOException {
+
+        System.out.println("title => "+title);
+        System.out.println("url => "+url);
+        System.out.println("option => "+option);
+
         if(option.equals("share")){
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());

@@ -8,5 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="notification">#FF4EF2</color>
+    <color name="statusBar">#f5f5f5</color>
 
 </resources>
