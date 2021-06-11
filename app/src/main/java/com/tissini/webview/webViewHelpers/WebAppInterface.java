@@ -39,7 +39,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 import static com.tissini.webview.helpers.BitmapH.getBitmapFromURL;
 
-public class WebAppInterface {
+public class
+WebAppInterface {
     private final static  String CHANEL_ID = "tissini";
     private final static  String CHANEL_ID_NAME = "tissini";
     Context mContext;
@@ -68,21 +69,23 @@ public class WebAppInterface {
         option : option to perform => share o download
      **/
     @JavascriptInterface
-    public void optionImage(String title,String url,String option) throws IOException {
+    public void optionImage(String productName,String productURL,String imageName, String imageURL,String action) throws IOException {
 
-        System.out.println("title => "+title);
-        System.out.println("url => "+url);
-        System.out.println("option => "+option);
+        System.out.println("productName => "+productName);
+        System.out.println("productURL => "+productURL);
+        System.out.println("imageName => "+imageName);
+        System.out.println("imageURL => "+imageURL);
+        System.out.println("action => "+action);
 
-        if(option.equals("share")){
+        if(action.equals("share")){
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
-            Bitmap img = getBitmapFromURL(url);
-            shareImage(img,title);
+            Bitmap img = getBitmapFromURL(imageURL);
+            shareImage(img,imageName,productName,productURL);
         }
 
-        if(option.equals("download")){
-            downloadImage(url,title);
+        if(action.equals("download")){
+            downloadImage(imageURL,imageName);
         }
 
     }
@@ -118,8 +121,9 @@ public class WebAppInterface {
         img   : image to share
         title : image name
      **/
-    public void shareImage(Bitmap img,String title) throws IOException {
-        File file = new File(mContext.getExternalCacheDir(), "Compartir "+title);
+    public void shareImage(Bitmap img,String imageName,String productName,String productURL) throws IOException {
+
+        File file = new File(mContext.getExternalCacheDir(), "Compartir "+imageName);
         FileOutputStream fOut = new FileOutputStream(file);
         img.compress(Bitmap.CompressFormat.PNG, 100, fOut);
         fOut.flush();
@@ -128,8 +132,9 @@ public class WebAppInterface {
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(file));
+        intent.putExtra(Intent.EXTRA_TEXT,productName + "\n"+productURL);
         intent.setType("image/png");
-        mContext.startActivity(Intent.createChooser(intent,title));
+        mContext.startActivity(Intent.createChooser(intent,imageName));
 
     }
 
