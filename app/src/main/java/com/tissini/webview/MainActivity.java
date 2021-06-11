@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +26,11 @@ public class MainActivity extends AppCompatActivity {
     Webview webview;
     String url_stage = "https://stage.tissini.dev/";
     String url_production = "https://tissini.app/";
+<<<<<<< HEAD
     String url = url_production;
+=======
+    String url = url_stage;
+>>>>>>> PushNotification
     private ValueCallback<Uri> mUploadMessage;
     public ValueCallback<Uri[]> uploadMessage;
     public static final int REQUEST_SELECT_FILE = 100;
@@ -33,6 +38,20 @@ public class MainActivity extends AppCompatActivity {
     private String [] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        String updateAppInPlayStore = getIntent().getStringExtra("updateAppInPlayStore");
+        if(updateAppInPlayStore != null) {
+                NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancel(0);
+            try{
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+ BuildConfig.APPLICATION_ID));
+                startActivity(intent);
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+
         if(!isOnline(this)){
             Toast toast = Toast.makeText(this, "Conectese a una red con internet", Toast.LENGTH_LONG);
             toast.show();
@@ -43,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
         getSupportActionBar().hide();
-
         webview = new Webview(this,getIntent());
         webview.webView.setWebChromeClient(new MyWebChromClientClass());
         webview.loadUrl(this.url);
@@ -104,8 +122,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
             return super.onJsAlert(view, url, message, result);
-
-
         }
 
         // For Lollipop 5.0+ Devices

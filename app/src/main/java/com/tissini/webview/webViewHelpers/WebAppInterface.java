@@ -3,10 +3,15 @@ package com.tissini.webview.webViewHelpers;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -15,18 +20,29 @@ import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.tissini.webview.BuildConfig;
+import com.tissini.webview.MainActivity;
+import com.tissini.webview.R;
 import com.tissini.webview.helpers.BitmapH;
+import com.tissini.webview.services.NotificationsMessagingService;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
+import static com.tissini.webview.helpers.BitmapH.getBitmapFromURL;
 
-public class WebAppInterface {
+public class
+WebAppInterface {
+    private final static  String CHANEL_ID = "tissini";
+    private final static  String CHANEL_ID_NAME = "tissini";
     Context mContext;
     private static final int STORAGE_PERMISSION = 1000;
     private String [] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -53,16 +69,23 @@ public class WebAppInterface {
         option : option to perform => share o download
      **/
     @JavascriptInterface
-    public void optionImage(String title,String url,String option) throws IOException {
-        if(option.equals("share")){
+    public void optionImage(String productName,String productURL,String imageName, String imageURL,String action) throws IOException {
+
+        System.out.println("productName => "+productName);
+        System.out.println("productURL => "+productURL);
+        System.out.println("imageName => "+imageName);
+        System.out.println("imageURL => "+imageURL);
+        System.out.println("action => "+action);
+
+        if(action.equals("share")){
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
-            Bitmap img = BitmapH.getBitmapFromURL(url);
-            shareImage(img,title);
+            Bitmap img = getBitmapFromURL(imageURL);
+            shareImage(img,imageName,productName,productURL);
         }
 
-        if(option.equals("download")){
-            downloadImage(url,title);
+        if(action.equals("download")){
+            downloadImage(imageURL,imageName);
         }
 
     }
@@ -70,6 +93,9 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void  updateApp(){
+        createNotificationChanel();
+        NotificationUpdate();
+
         try{
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+ BuildConfig.APPLICATION_ID));
@@ -95,8 +121,9 @@ public class WebAppInterface {
         img   : image to share
         title : image name
      **/
-    public void shareImage(Bitmap img,String title) throws IOException {
-        File file = new File(mContext.getExternalCacheDir(), "Compartir "+title);
+    public void shareImage(Bitmap img,String imageName,String productName,String productURL) throws IOException {
+
+        File file = new File(mContext.getExternalCacheDir(), "Compartir "+imageName);
         FileOutputStream fOut = new FileOutputStream(file);
         img.compress(Bitmap.CompressFormat.PNG, 100, fOut);
         fOut.flush();
@@ -105,8 +132,9 @@ public class WebAppInterface {
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(file));
+        intent.putExtra(Intent.EXTRA_TEXT,productName + "\n"+productURL);
         intent.setType("image/png");
-        mContext.startActivity(Intent.createChooser(intent,title));
+        mContext.startActivity(Intent.createChooser(intent,imageName));
 
     }
 
@@ -135,6 +163,39 @@ public class WebAppInterface {
 
         }
     }
+
+    public void createNotificationChanel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel notificationChannel = new NotificationChannel(CHANEL_ID,CHANEL_ID_NAME, NotificationManager.IMPORTANCE_HIGH);
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+    }
+
+    public  void NotificationUpdate(){
+        Bitmap img = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.update);
+        Intent intent = new Intent(mContext, MainActivity.class);
+        intent.putExtra("updateAppInPlayStore","updateAppInPlayStore");
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext,1,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+        String message ="Presiona en el botón Actualizar para que disfrutes de nuevas y mejores experiencias";
+
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext.getApplicationContext(),CHANEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("¡Vamos a actualizar tu oficina virtual!")
+                .setContentText(message)
+                .setColor(Color.parseColor("#FF4EF2"))
+                .addAction(R.mipmap.ic_launcher,"Actualizar",pendingIntent)
+                .setFullScreenIntent(pendingIntent,true)
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(mContext.getApplicationContext());
+        notificationManagerCompat.notify(0,notification.build());
+
+    }
+
+
 
 
 }

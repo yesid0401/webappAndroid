@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 
 import com.tissini.webview.controllers.VersionController;
 import com.tissini.webview.helpers.PushNotificationsH;
-import com.tissini.webview.services.VersionServices;
 
 public class MywebViewClient extends WebViewClient {
 
@@ -28,7 +27,7 @@ public class MywebViewClient extends WebViewClient {
         this.activity = activity;
         this.intent = intent;
         this.versionController  = new VersionController(this.webView);
-
+        PushNotificationsH.intent = intent;
     }
 
     @Override
@@ -38,7 +37,8 @@ public class MywebViewClient extends WebViewClient {
                 url.startsWith("intent://") ||
                 url.startsWith("http://") ||
                 url.startsWith("https://io.tissini.app") ||
-                url.startsWith("https://stage.tissini.app")) {
+                url.startsWith("https://stage.tissini.app") ||
+                url.startsWith("https://tissini.com/blog/")){
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
