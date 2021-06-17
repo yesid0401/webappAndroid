@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     String url_stage = "https://stage.tissini.dev/";
     String url_production = "https://tissini.app/";
     String url = url_production;
-    
+
     private ValueCallback<Uri> mUploadMessage;
     public ValueCallback<Uri[]> uploadMessage;
     public static final int REQUEST_SELECT_FILE = 100;
