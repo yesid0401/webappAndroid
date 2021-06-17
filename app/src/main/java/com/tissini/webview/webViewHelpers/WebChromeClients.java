@@ -11,16 +11,13 @@ import android.webkit.WebView;
 
 import androidx.core.app.ActivityCompat;
 
-public class MywebChromeClient extends WebChromeClient  {
-    public ValueCallback<Uri> mUploadMessage;
+public class WebChromeClients extends WebChromeClient {
     public static ValueCallback<Uri[]> uploadMessage;
     public static final int REQUEST_SELECT_FILE = 100;
-    public final static int FILECHOOSER_RESULTCODE = 1;
-    Activity a;
-    
+    private Activity activity;
 
-    public MywebChromeClient (Activity a ){
-        this.a = a;
+    public WebChromeClients(Activity activity ){
+        this.activity = activity;
     }
 
     @Override
@@ -29,7 +26,7 @@ public class MywebChromeClient extends WebChromeClient  {
     }
 
     // For Lollipop 5.0+ Devices
-    public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams)
+    public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, android.webkit.WebChromeClient.FileChooserParams fileChooserParams)
     {
         if (uploadMessage != null) {
             uploadMessage.onReceiveValue(null);
@@ -37,24 +34,20 @@ public class MywebChromeClient extends WebChromeClient  {
         }
 
         uploadMessage = filePathCallback;
-        System.out.println("uploadMessage  DESEDE WEBCHROM=> XXXX "+uploadMessage);
         Intent intent = null;
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             intent = fileChooserParams.createIntent();
         }
-        try
-        {
-            ActivityCompat.startActivityForResult(a,intent, REQUEST_SELECT_FILE,null);
-        } catch (ActivityNotFoundException e)
-        {
+        try {
+            ActivityCompat.startActivityForResult(activity,intent, REQUEST_SELECT_FILE,null);
+        }
+        catch (ActivityNotFoundException e) {
             uploadMessage = null;
             return false;
         }
         return true;
     }
-
-
-
 }
 
 

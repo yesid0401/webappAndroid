@@ -10,11 +10,16 @@ android {
         minSdkVersion 24
         targetSdkVersion 30
 <<<<<<< HEAD
+<<<<<<< HEAD
         versionCode 19
         versionName "3.1.16"
 =======
         versionCode 26
         versionName "3.1.21"
+>>>>>>> PushNotification
+=======
+        versionCode 27
+        versionName "3.1.22"
 >>>>>>> PushNotification
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

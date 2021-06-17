@@ -9,25 +9,25 @@ import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-
 import com.tissini.webview.controllers.VersionController;
-import com.tissini.webview.helpers.PushNotificationsH;
 
-public class MywebViewClient extends WebViewClient {
+import static com.tissini.webview.controllers.InterestController.addInterestsToUser;
+import static com.tissini.webview.controllers.InterestController.saveInterestsInDataBase;
+import static com.tissini.webview.controllers.NotificationController.readNotification;
 
+public class WebViewClients extends WebViewClient {
     Activity activity;
     WebView webView;
     ProgressBar progressBar;
     Intent intent;
     VersionController versionController;
 
-    public MywebViewClient(ProgressBar progressBar, WebView webView, Activity activity,Intent intent){
+    public WebViewClients(ProgressBar progressBar, WebView webView, Activity activity, Intent intent){
         this.progressBar = progressBar;
         this.webView = webView;
         this.activity = activity;
         this.intent = intent;
         this.versionController  = new VersionController(this.webView);
-        PushNotificationsH.intent = intent;
     }
 
     @Override
@@ -62,8 +62,13 @@ public class MywebViewClient extends WebViewClient {
         webView.evaluateJavascript("JSON.parse(localStorage.getItem('customer'))", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                PushNotificationsH.addInterest(value);
-            }
+                addInterestsToUser(value);
+                saveInterestsInDataBase(value);
+                String idNotification = intent.getStringExtra("idNotification");
+                if(idNotification != null) {
+                    readNotification(idNotification,value);
+                }
+          }
         });
     }
 

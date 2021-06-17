@@ -4,24 +4,15 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
-
-
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
 import com.google.firebase.messaging.RemoteMessage;
 import com.pusher.pushnotifications.fcm.MessagingService;
 import com.tissini.webview.MainActivity;
 import com.tissini.webview.R;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import static com.tissini.webview.helpers.Functions.getBitmapFromURL;
 
 
 public class NotificationsMessagingService extends MessagingService {
@@ -49,7 +40,7 @@ public class NotificationsMessagingService extends MessagingService {
         String idNotification = remoteMessage.getData().get("idNotification");
 
         String GROUP_KEY_WORK_EMAIL = "com.tissini.app/notifications";
-      //  Bitmap img = getBitmapFromURL("https://io.tissini.app/img/categories/textiles-ropa-interior-panties.png");
+        //Bitmap img = getBitmapFromURL("https://io.tissini.app/img/categories/textiles-ropa-interior-panties.png");
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
