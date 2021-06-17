@@ -19,15 +19,8 @@ public class MainActivity extends AppCompatActivity {
     Webview webview;
     String url_stage = "https://stage.tissini.dev/";
     String url_production = "https://tissini.app/";
-<<<<<<< HEAD
-<<<<<<< HEAD
     String url = url_production;
-=======
-    String url = url_stage;
->>>>>>> PushNotification
-=======
-    String url = url_production;
->>>>>>> PushNotification
+    
     private ValueCallback<Uri> mUploadMessage;
     public ValueCallback<Uri[]> uploadMessage;
     public static final int REQUEST_SELECT_FILE = 100;
