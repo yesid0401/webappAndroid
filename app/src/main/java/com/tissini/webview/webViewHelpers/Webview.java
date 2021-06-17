@@ -3,15 +3,13 @@ package com.tissini.webview.webViewHelpers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.tissini.webview.BuildConfig;
-import com.tissini.webview.MainActivity;
 import com.tissini.webview.R;
 
 import java.util.HashMap;
@@ -23,21 +21,18 @@ public class Webview {
     public Activity activity;
     public WebSettings webSettings;
     public ProgressBar progressBar;
-    //public SwipeRefreshLayout swipeRefreshLayout;
     public Intent intent;
 
     public Webview(Activity activity,Intent intent){
         this.activity           = activity;
         this.webView            = (WebView) activity.findViewById(R.id.webview);
         this.progressBar        = (ProgressBar) activity.findViewById(R.id.progressBar);
-        //this.swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe);
         this.intent             = intent;
         this.webSettings        = this.webView.getSettings();
 
-       // this.webView.setWebChromeClient(new MywebChromeClient(this.activity));
-        this.webView.setWebViewClient(new MywebViewClient(this.progressBar,this.webView,this.activity,intent));
+        this.webView.setWebChromeClient(new WebChromeClients(this.activity));
+        this.webView.setWebViewClient(new WebViewClients(this.progressBar,this.webView,this.activity,intent));
         this.webView.addJavascriptInterface(new WebAppInterface(activity), "Webview");
-        //onRefresh();
     }
 
     public void webSettings(){
@@ -54,11 +49,11 @@ public class Webview {
 
         Uri appLinkData = intent.getData();
         if(appLinkData != null)
-            url = appLinkData.toString();
+            url = appLinkData.toString(); //Open webview for deeplinking
 
         String link = intent.getStringExtra("link");
         if (link != null)
-            url = link;
+            url = link; //Open webview for notification
 
         Map<String, String> noCacheHeaders = new HashMap<String, String>(2);
         noCacheHeaders.put("Cache-Control", "no-cache");
@@ -66,18 +61,6 @@ public class Webview {
 
         webView.loadUrl(url,noCacheHeaders);
     }
-
-//    public  void onRefresh(){
-//        swipeRefreshLayout.setOnRefreshListener(
-//                new SwipeRefreshLayout.OnRefreshListener() {
-//                    @Override
-//                    public void onRefresh() {
-//                        webView.reload();
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                }
-//        );
-//    }
 
     public boolean goBack(){
         if(webView.canGoBack()){
@@ -90,5 +73,5 @@ public class Webview {
      public void onResume(){
         webView.onResume();
      }
-     
+
 }

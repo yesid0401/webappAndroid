@@ -1,14 +1,15 @@
 package com.tissini.webview.services;
 
+import com.pusher.pushnotifications.PushNotifications;
 import com.tissini.webview.interfaces.InterestI;
-import com.tissini.webview.interfaces.VersionI;
 import com.tissini.webview.models.Interest;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.tissini.webview.helpers.Functions.ParserData;
 
 public class InterestServices {
     private InterestI interestI;
@@ -21,7 +22,7 @@ public class InterestServices {
         interestI = retrofit.create(InterestI.class);
     }
 
-    public void createInterest(String client_id,String client_stage,String client_name, String client_platform ) {
+    public void saveInterestsInDataBase(String client_id,String client_stage,String client_name, String client_platform ) {
         Interest interest =  new Interest(client_id,client_stage,client_name,client_platform);
         Call<Interest> call = interestI.createInterest(interest);
 
@@ -40,5 +41,33 @@ public class InterestServices {
                 System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE FAILURE => "+t.getMessage());
             }
         });
+    }
+
+    public  void addInterestsToUser(String value){
+        if(!value.equals("null")){
+
+            String[] values = ParserData(value);
+
+            String user_id         = values[0];
+            String user_stage      = values[1];
+            String user_escalafon  = values[2];
+
+            PushNotifications.clearDeviceInterests();
+            PushNotifications.addDeviceInterest("general");
+            PushNotifications.addDeviceInterest(user_id);
+            PushNotifications.addDeviceInterest("Login");
+            PushNotifications.addDeviceInterest(user_stage);
+            PushNotifications.addDeviceInterest("Android");
+            PushNotifications.removeDeviceInterest("noLogin");
+
+            System.out.println(PushNotifications.getDeviceInterests());
+
+            if(!user_escalafon.equals("null"))
+                PushNotifications.addDeviceInterest(user_escalafon);
+        }else{
+            PushNotifications.clearDeviceInterests();
+            PushNotifications.addDeviceInterest("noLogin");
+            System.out.println(PushNotifications.getDeviceInterests());
+        }
     }
 }

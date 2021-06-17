@@ -18,26 +18,19 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
-import com.tissini.webview.BuildConfig;
 import com.tissini.webview.MainActivity;
 import com.tissini.webview.R;
-import com.tissini.webview.helpers.BitmapH;
-import com.tissini.webview.services.NotificationsMessagingService;
-
+import com.tissini.webview.helpers.Functions;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
 import static android.content.Context.NOTIFICATION_SERVICE;
-import static androidx.core.content.ContextCompat.checkSelfPermission;
-import static com.tissini.webview.helpers.BitmapH.getBitmapFromURL;
+import static com.tissini.webview.helpers.Functions.getBitmapFromURL;
 
 public class
 WebAppInterface {
@@ -71,12 +64,6 @@ WebAppInterface {
     @JavascriptInterface
     public void optionImage(String productName,String productURL,String imageName, String imageURL,String action) throws IOException {
 
-        System.out.println("productName => "+productName);
-        System.out.println("productURL => "+productURL);
-        System.out.println("imageName => "+imageName);
-        System.out.println("imageURL => "+imageURL);
-        System.out.println("action => "+action);
-
         if(action.equals("share")){
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -95,14 +82,7 @@ WebAppInterface {
     public void  updateApp(){
         createNotificationChanel();
         NotificationUpdate();
-
-        try{
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+ BuildConfig.APPLICATION_ID));
-            mContext.startActivity(intent);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
+        Functions.goToThePlayStore(mContext);
     }
 
     @JavascriptInterface
@@ -194,8 +174,5 @@ WebAppInterface {
         notificationManagerCompat.notify(0,notification.build());
 
     }
-
-
-
 
 }
