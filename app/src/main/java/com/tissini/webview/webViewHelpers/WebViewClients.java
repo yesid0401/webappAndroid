@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
 import android.webkit.ValueCallback;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -31,7 +32,9 @@ public class WebViewClients extends WebViewClient {
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView wv, String url) {
+    public boolean shouldOverrideUrlLoading(WebView wv,  WebResourceRequest request) {
+        String url = request.getUrl().toString();
+
         if(url.startsWith("whatsapp:") ||
                 url.startsWith("tel:") ||
                 url.startsWith("intent://") ||

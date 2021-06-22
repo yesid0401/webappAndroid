@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Functions {
 
@@ -36,34 +37,29 @@ public class Functions {
         return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
     }
 
-    public static String[] ParserData(String value){
+    public static ArrayList<String> ParserDataLocalStorage(String value){
 
-        JsonParser parser    = new JsonParser();
-        JsonElement jsonTree = parser.parse(value);
+        JsonObject jsonObject    = JsonParser.parseString(value).getAsJsonObject();
+        JsonElement id           = jsonObject.get("id");
+        JsonElement name         = jsonObject.get("name");
+        JsonElement stage        = jsonObject.get("stage");
+        JsonElement elite        = jsonObject.get("elite");
 
-        JsonObject jsonObject = jsonTree.getAsJsonObject();
-        JsonElement id        = jsonObject.get("id");
-        JsonElement name      = jsonObject.get("name");
-        JsonElement stage     = jsonObject.get("stage");
-        JsonElement elite     = jsonObject.get("elite");
+        JsonObject jsonObject2   = JsonParser.parseString(String.valueOf(elite)).getAsJsonObject();
+        JsonElement escalafon    = jsonObject2.get("escalafon");
 
-        JsonElement jsonTree2  = parser.parse(String.valueOf(elite));
-        JsonObject jsonObject2 = jsonTree2.getAsJsonObject();
-        JsonElement escalafon  = jsonObject2.get("escalafon");
+        String user_id           = id.toString();
+        String user_name         = name.toString().replaceAll("^[\"']+|[\"']+$", "");
+        String user_stage        = stage.toString().replaceAll("^[\"']+|[\"']+$", "");
+        String user_escalafon    = escalafon.toString();
 
-        String user_id         = (String) id.toString();
-        String user_name       = (String) name.toString().replaceAll("^[\"']+|[\"']+$", "");
-        String user_stage      = (String) stage.toString().replaceAll("^[\"']+|[\"']+$", "");
-        String user_escalafon  = (String) escalafon.toString();
+        ArrayList<String> arrayList = new ArrayList();
+        arrayList.add(user_id);
+        arrayList.add(user_stage);
+        arrayList.add(user_escalafon);
+        arrayList.add(user_name);
 
-        String[] values = new String[4];
-
-        values[0] = user_id;
-        values[1] = user_stage;
-        values[2] = user_escalafon;
-        values[3] = user_name;
-
-        return values;
+        return arrayList;
     }
 
     public static Bitmap getBitmapFromURL(String src) {
