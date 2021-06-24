@@ -3,13 +3,13 @@ package com.tissini.webview.services;
 import com.pusher.pushnotifications.PushNotifications;
 import com.tissini.webview.interfaces.InterestI;
 import com.tissini.webview.models.Interest;
+import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.tissini.webview.helpers.Functions.ParserData;
+import static com.tissini.webview.helpers.Functions.ParserDataLocalStorage;
 
 public class InterestServices {
     private InterestI interestI;
@@ -46,11 +46,11 @@ public class InterestServices {
     public  void addInterestsToUser(String value){
         if(!value.equals("null")){
 
-            String[] values = ParserData(value);
+            ArrayList values = ParserDataLocalStorage(value);
 
-            String user_id         = values[0];
-            String user_stage      = values[1];
-            String user_escalafon  = values[2];
+            String user_id         = values.get(0).toString();
+            String user_stage      = values.get(1).toString();
+            String user_escalafon  = values.get(2).toString();
 
             PushNotifications.clearDeviceInterests();
             PushNotifications.addDeviceInterest("general");

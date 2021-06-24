@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
@@ -38,21 +39,36 @@ public class NotificationsMessagingService extends MessagingService {
         String title          = remoteMessage.getData().get("title");
         String link           = remoteMessage.getData().get("link");
         String idNotification = remoteMessage.getData().get("idNotification");
+        String image          = remoteMessage.getData().get("image");
 
+        System.out.println("IMAGEN => "+image);
         String GROUP_KEY_WORK_EMAIL = "com.tissini.app/notifications";
-        //Bitmap img = getBitmapFromURL("https://io.tissini.app/img/categories/textiles-ropa-interior-panties.png");
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID);
+        if(!image.equals("")){
+            Bitmap img = getBitmapFromURL(image);
+             notification
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setColor(Color.parseColor("#FF4EF2"))
+            .setLargeIcon(img)
+            .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setGroup(GROUP_KEY_WORK_EMAIL)
+            .setAutoCancel(true);
+        }else{
+            notification
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setColor(Color.parseColor("#FF4EF2"))
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setGroup(GROUP_KEY_WORK_EMAIL)
+            .setAutoCancel(true);
+        }
 
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(body)
-                .setColor(Color.parseColor("#FF4EF2"))
-                //.setLargeIcon(img)
-                //.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setGroup(GROUP_KEY_WORK_EMAIL)
-                .setAutoCancel(true);
+
 
         NotificationCompat.Builder summaryNotification =new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
                 .setContentTitle(title)

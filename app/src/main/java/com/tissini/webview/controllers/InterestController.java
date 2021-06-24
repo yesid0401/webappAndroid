@@ -2,7 +2,9 @@ package com.tissini.webview.controllers;
 
 import com.tissini.webview.services.InterestServices;
 
-import static com.tissini.webview.helpers.Functions.ParserData;
+import java.util.ArrayList;
+
+import static com.tissini.webview.helpers.Functions.ParserDataLocalStorage;
 
 public class InterestController {
     private static InterestServices interestServices = new InterestServices();
@@ -10,10 +12,10 @@ public class InterestController {
 
     public static  void saveInterestsInDataBase(String value){
         if(!value.equals("null")) {
-            String[] values = ParserData(value);
-            String client_id    = values[0];
-            String client_stage = values[1];
-            String client_name  = values[3];
+            ArrayList values = ParserDataLocalStorage(value);
+            String client_id    = values.get(0).toString();
+            String client_stage = values.get(1).toString();
+            String client_name  = values.get(3).toString();
             interestServices.saveInterestsInDataBase(client_id, client_stage, client_name, "Android");
         }
     }

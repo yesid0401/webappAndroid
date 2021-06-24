@@ -35,18 +35,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-
-    //esto es lo nuevo
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-
     implementation 'com.google.android.play:core:1.10.0'
-    //hasta aca
-
-    //jsoup
-    implementation 'org.jsoup:jsoup:1.13.1'
-
-
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -57,5 +48,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:20.2.3'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.pusher:push-notifications-android:1.6.2'
+
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.google.android.gms:play-services-auth-api-phone:17.4.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
