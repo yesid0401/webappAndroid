@@ -10,18 +10,8 @@
     {
       "type": "SINGLE",
       "filters": [],
-<<<<<<< HEAD
-<<<<<<< HEAD
-      "versionCode": 20,
-      "versionName": "3.1.16",
-=======
-      "versionCode": 26,
-      "versionName": "3.1.21",
->>>>>>> PushNotification
-=======
-      "versionCode": 27,
-      "versionName": "3.1.22",
->>>>>>> PushNotification
+      "versionCode": 28,
+      "versionName": "3.1.23",
       "outputFile": "app-release.apk"
     }
   ]

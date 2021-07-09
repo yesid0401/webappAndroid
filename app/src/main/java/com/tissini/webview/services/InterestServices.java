@@ -16,7 +16,7 @@ public class InterestServices {
 
     public InterestServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://backendnotifications.herokuapp.com/")
+                .baseUrl("https://backofficeapi.tissini.app/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interestI = retrofit.create(InterestI.class);

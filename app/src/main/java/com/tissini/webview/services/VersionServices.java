@@ -18,7 +18,7 @@ public class VersionServices {
 
     public VersionServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://io.tissini.app/")
+                .baseUrl("https://v3.tissini.app/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         versionI = retrofit.create(VersionI.class);

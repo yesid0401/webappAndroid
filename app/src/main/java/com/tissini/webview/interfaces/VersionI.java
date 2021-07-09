@@ -11,6 +11,6 @@ import retrofit2.http.Headers;
 public interface VersionI {
 
     @Headers({ "Content-Type: application/json;charset=UTF-8","Cache-Control: no-cache","Cache-Control: no-store"})
-    @GET("api/v1/version/3")
+    @GET("api/v3/version/3")
     Call<Version> getVersion();
 }
