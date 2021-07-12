@@ -10,6 +10,7 @@ import android.net.Uri;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.pusher.pushnotifications.PushNotifications;
 import com.tissini.webview.BuildConfig;
 
 import java.io.IOException;
@@ -53,6 +54,8 @@ public class Functions {
         String user_stage        = stage.toString().replaceAll("^[\"']+|[\"']+$", "");
         String user_escalafon    = escalafon.toString();
 
+        user_escalafon = tranformEscalafon(user_escalafon);
+
         ArrayList<String> arrayList = new ArrayList();
         arrayList.add(user_id);
         arrayList.add(user_stage);
@@ -74,6 +77,37 @@ public class Functions {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public static String tranformEscalafon(String user_escalafon){
+        String escalafon ="";
+
+        if(user_escalafon.equals("null"))
+            escalafon = "Perla";
+        else{
+            switch (user_escalafon) {
+                case "143464":
+                    escalafon = "Esmeralda";
+                    break;
+                case "143462":
+                    escalafon = "Zafiro";
+                    break;
+                case "143465":
+                    escalafon = "Rubi";
+                    break;
+                case "143463":
+                    escalafon = "Diamante";
+                    break;
+                case "236230":
+                    escalafon = "Estrella_Rosa";
+                    break;
+                case "563468":
+                    escalafon = "Estrella_Dorada";
+                    break;
+            }
+        }
+
+        return escalafon;
     }
 
 }

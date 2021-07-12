@@ -16,14 +16,15 @@ public class InterestServices {
 
     public InterestServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://backofficeapi.tissini.app/")
+                .baseUrl("http://192.168.1.12:8000/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interestI = retrofit.create(InterestI.class);
     }
 
-    public void saveInterestsInDataBase(String client_id,String client_stage,String client_name, String client_platform ) {
-        Interest interest =  new Interest(client_id,client_stage,client_name,client_platform);
+    public void saveInterestsInDataBase(String client_id,String client_stage,String client_name, String client_platform,String client_escalafon ) {
+
+        Interest interest =  new Interest(client_id,client_stage,client_name,client_platform,client_escalafon);
         Call<Interest> call = interestI.createInterest(interest);
 
         call.enqueue(new Callback<Interest>() {
@@ -33,12 +34,12 @@ public class InterestServices {
                     System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE RESPONSE");
                 }
 
-                System.out.println("RESPONESE => "+response.body().toString());
+                  System.out.println("RESPONESE => "+response.body().toString());
             }
 
             @Override
             public void onFailure(Call<Interest> call, Throwable t) {
-                System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE FAILURE => "+t.getMessage());
+                System.err.println(" ERROR AL PROCESAR SOLICITUS DESDE FAILURE In => "+t.getMessage());
             }
         });
     }
@@ -57,13 +58,15 @@ public class InterestServices {
             PushNotifications.addDeviceInterest(user_id);
             PushNotifications.addDeviceInterest("Login");
             PushNotifications.addDeviceInterest(user_stage);
+            PushNotifications.addDeviceInterest(user_escalafon);
             PushNotifications.addDeviceInterest("Android");
+
             PushNotifications.removeDeviceInterest("noLogin");
 
             System.out.println(PushNotifications.getDeviceInterests());
 
-            if(!user_escalafon.equals("null"))
-                PushNotifications.addDeviceInterest(user_escalafon);
+
+
         }else{
             PushNotifications.clearDeviceInterests();
             PushNotifications.addDeviceInterest("noLogin");

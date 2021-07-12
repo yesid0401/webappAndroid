@@ -16,7 +16,8 @@ public class InterestController {
             String client_id    = values.get(0).toString();
             String client_stage = values.get(1).toString();
             String client_name  = values.get(3).toString();
-            interestServices.saveInterestsInDataBase(client_id, client_stage, client_name, "Android");
+            String client_escalafon = values.get(2).toString();
+            interestServices.saveInterestsInDataBase(client_id, client_stage, client_name, "Android",client_escalafon);
         }
     }
 
