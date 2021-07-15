@@ -41,12 +41,13 @@ public class WebViewClients extends WebViewClient {
                 url.startsWith("http://") ||
                 url.startsWith("https://io.tissini.app") ||
                 url.startsWith("https://stage.tissini.app") ||
+                url.startsWith("https://v3.tissini.app/") ||
                 url.startsWith("https://tissini.com/blog/")){
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
                 activity.startActivity(intent);
-                if(!url.startsWith("https://io.tissini.app") && !url.startsWith("https://stage.tissini.app"))
+                if(!url.startsWith("https://io.tissini.app") && !url.startsWith("https://stage.tissini.app") && !url.startsWith("https://v3.tissini.app/"))
                    webView.goBack();
                 return true;
             }catch (android.content.ActivityNotFoundException e){
