@@ -13,7 +13,7 @@ public class VersionController {
         this.webview = webview;
     }
 
-    public void getVerion(){
+    public void getVersion(){
         versionServices.getVersion(webview);
     }
 

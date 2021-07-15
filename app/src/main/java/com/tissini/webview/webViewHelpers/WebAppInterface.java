@@ -23,7 +23,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import com.tissini.webview.MainActivity;
 import com.tissini.webview.R;
-import com.tissini.webview.helpers.Functions;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.tissini.webview.helpers.Functions.getBitmapFromURL;
+import static com.tissini.webview.helpers.Functions.goToThePlayStore;
 
 public class
 WebAppInterface {
@@ -47,13 +47,11 @@ WebAppInterface {
     /** Show a toast from the web page */
     @JavascriptInterface
     public void shareApi( String title,String body) {
-
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, title);
         intent.putExtra(Intent.EXTRA_TEXT, body);
         mContext.startActivity(Intent.createChooser(intent, title));
-
     }
 
     /**
@@ -82,7 +80,7 @@ WebAppInterface {
     public void  updateApp(){
         createNotificationChanel();
         NotificationUpdate();
-        Functions.goToThePlayStore(mContext);
+        goToThePlayStore(mContext);
     }
 
     @JavascriptInterface

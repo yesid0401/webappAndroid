@@ -61,7 +61,7 @@ public class WebViewClients extends WebViewClient {
     public void onPageFinished (WebView view,String url){
 
         progressBar.setVisibility(View.INVISIBLE);
-        versionController.getVerion();
+        versionController.getVersion();
         webView.evaluateJavascript("JSON.parse(localStorage.getItem('customer'))", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {

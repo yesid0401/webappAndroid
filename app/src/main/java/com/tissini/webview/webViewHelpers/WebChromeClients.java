@@ -8,7 +8,6 @@ import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-
 import androidx.core.app.ActivityCompat;
 
 public class WebChromeClients extends WebChromeClient {

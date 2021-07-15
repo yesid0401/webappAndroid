@@ -1,9 +1,6 @@
 package com.tissini.webview.controllers;
-
 import com.tissini.webview.services.NotifificationServices;
-
 import java.util.ArrayList;
-
 import static com.tissini.webview.helpers.Functions.ParserDataLocalStorage;
 
 public class NotificationController {

@@ -10,14 +10,14 @@ import android.net.Uri;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.pusher.pushnotifications.PushNotifications;
 import com.tissini.webview.BuildConfig;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Functions {
 
@@ -40,21 +40,14 @@ public class Functions {
 
     public static ArrayList<String> ParserDataLocalStorage(String value){
 
-        JsonObject jsonObject    = JsonParser.parseString(value).getAsJsonObject();
-        JsonElement id           = jsonObject.get("id");
-        JsonElement name         = jsonObject.get("name");
-        JsonElement stage        = jsonObject.get("stage");
-        JsonElement elite        = jsonObject.get("elite");
+        JsonObject customer_object    = JsonParser.parseString(value).getAsJsonObject();
+        String user_id                = customer_object.get("id").toString();
+        String user_name              = customer_object.get("name").toString().replaceAll("^[\"']+|[\"']+$", "");
+        String user_stage             = customer_object.get("stage").toString().replaceAll("^[\"']+|[\"']+$", "");
+        JsonElement elite             = customer_object.get("elite");
 
-        JsonObject jsonObject2   = JsonParser.parseString(String.valueOf(elite)).getAsJsonObject();
-        JsonElement escalafon    = jsonObject2.get("escalafon");
-
-        String user_id           = id.toString();
-        String user_name         = name.toString().replaceAll("^[\"']+|[\"']+$", "");
-        String user_stage        = stage.toString().replaceAll("^[\"']+|[\"']+$", "");
-        String user_escalafon    = escalafon.toString();
-
-        user_escalafon = tranformEscalafon(user_escalafon);
+        JsonObject elite_object   = JsonParser.parseString(String.valueOf(elite)).getAsJsonObject();
+        String user_escalafon     = tranformEscalafon(elite_object.get("escalafon").toString());
 
         ArrayList<String> arrayList = new ArrayList();
         arrayList.add(user_id);
@@ -80,34 +73,15 @@ public class Functions {
     }
 
     public static String tranformEscalafon(String user_escalafon){
-        String escalafon ="";
-
-        if(user_escalafon.equals("null"))
-            escalafon = "Perla";
-        else{
-            switch (user_escalafon) {
-                case "143464":
-                    escalafon = "Esmeralda";
-                    break;
-                case "143462":
-                    escalafon = "Zafiro";
-                    break;
-                case "143465":
-                    escalafon = "Rubi";
-                    break;
-                case "143463":
-                    escalafon = "Diamante";
-                    break;
-                case "236230":
-                    escalafon = "Estrella_Rosa";
-                    break;
-                case "563468":
-                    escalafon = "Estrella_Dorada";
-                    break;
-            }
-        }
-
-        return escalafon;
+        Map<String,String> hashMapEscalafon = new HashMap<String, String>();
+        hashMapEscalafon.put("null","Perla");
+        hashMapEscalafon.put("143464","Esmeralda");
+        hashMapEscalafon.put("143462","Zafiro");
+        hashMapEscalafon.put("143465","Rubi");
+        hashMapEscalafon.put("143463","Diamante");
+        hashMapEscalafon.put("236230","Estrella_Rosa");
+        hashMapEscalafon.put("563468","Estrella_Dorada");
+        return hashMapEscalafon.get(user_escalafon) != null ?  hashMapEscalafon.get(user_escalafon): "Perla";
     }
 
 }

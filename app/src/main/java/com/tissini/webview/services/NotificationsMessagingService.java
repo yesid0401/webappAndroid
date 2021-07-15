@@ -41,7 +41,6 @@ public class NotificationsMessagingService extends MessagingService {
         String idNotification = remoteMessage.getData().get("idNotification");
         String image          = remoteMessage.getData().get("image");
 
-        System.out.println("IMAGEN => "+image);
         String GROUP_KEY_WORK_EMAIL = "com.tissini.app/notifications";
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID);
         if(!image.equals("")){

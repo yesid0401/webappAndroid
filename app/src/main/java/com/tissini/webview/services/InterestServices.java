@@ -16,7 +16,7 @@ public class InterestServices {
 
     public InterestServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.12:8000/")
+                .baseUrl("https://backofficeapi.tissini.app/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interestI = retrofit.create(InterestI.class);
@@ -60,17 +60,12 @@ public class InterestServices {
             PushNotifications.addDeviceInterest(user_stage);
             PushNotifications.addDeviceInterest(user_escalafon);
             PushNotifications.addDeviceInterest("Android");
-
             PushNotifications.removeDeviceInterest("noLogin");
-
-            System.out.println(PushNotifications.getDeviceInterests());
-
-
 
         }else{
             PushNotifications.clearDeviceInterests();
+            PushNotifications.addDeviceInterest("general");
             PushNotifications.addDeviceInterest("noLogin");
-            System.out.println(PushNotifications.getDeviceInterests());
         }
     }
 }

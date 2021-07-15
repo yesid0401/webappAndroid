@@ -1,9 +1,7 @@
 package com.tissini.webview.services;
 
-import com.tissini.webview.interfaces.InterestI;
 import com.tissini.webview.interfaces.NotificationI;
 import com.tissini.webview.models.Notification;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
