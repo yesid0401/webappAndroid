@@ -11,9 +11,10 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.widget.Toast;
 import com.pusher.pushnotifications.PushNotifications;
-import com.tissini.webview.helpers.Functions;
 import com.tissini.webview.webViewHelpers.WebChromeClients;
 import com.tissini.webview.webViewHelpers.Webview;
+import static com.tissini.webview.helpers.Functions.goToThePlayStore;
+import static com.tissini.webview.helpers.Functions.isOnline;
 
 public class MainActivity extends AppCompatActivity {
     Webview webview;
@@ -29,17 +30,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        if(!isOnline(this)){
+            Toast toast = Toast.makeText(this, "Conectese a una red con internet", Toast.LENGTH_LONG);
+            toast.show();
+            finish();
+        }
+
         String updateAppInPlayStore = getIntent().getStringExtra("updateAppInPlayStore");
         if(updateAppInPlayStore != null) {
                 NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 manager.cancel(0);
-                Functions.goToThePlayStore(this);
-        }
-
-        if(!Functions.isOnline(this)){
-            Toast toast = Toast.makeText(this, "Conectese a una red con internet", Toast.LENGTH_LONG);
-            toast.show();
-            finish();
+                goToThePlayStore(this);
         }
 
         setTheme(R.style.SplashTheme);

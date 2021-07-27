@@ -29,7 +29,6 @@ public class Webview {
         this.progressBar        = (ProgressBar) activity.findViewById(R.id.progressBar);
         this.intent             = intent;
         this.webSettings        = this.webView.getSettings();
-
         this.webView.setWebChromeClient(new WebChromeClients(this.activity));
         this.webView.setWebViewClient(new WebViewClients(this.progressBar,this.webView,this.activity,intent));
         this.webView.addJavascriptInterface(new WebAppInterface(activity), "Webview");

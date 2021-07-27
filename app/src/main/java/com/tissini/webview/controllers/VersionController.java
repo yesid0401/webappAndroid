@@ -1,7 +1,6 @@
 package com.tissini.webview.controllers;
 
 import com.tissini.webview.services.VersionServices;
-
 import android.webkit.WebView;
 
 public class VersionController {

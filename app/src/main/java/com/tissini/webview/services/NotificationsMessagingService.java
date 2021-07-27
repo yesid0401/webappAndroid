@@ -19,6 +19,7 @@ import static com.tissini.webview.helpers.Functions.getBitmapFromURL;
 public class NotificationsMessagingService extends MessagingService {
     private final static  String CHANEL_ID = "tissini";
     private final static  String CHANEL_ID_NAME = "tissini";
+    private final static  String GROUP_KEY_WORK_APP = "com.tissini.app/notifications";
     @Override
     public void onMessageReceived( RemoteMessage remoteMessage) {
            createNotificationChanel();
@@ -41,43 +42,57 @@ public class NotificationsMessagingService extends MessagingService {
         String idNotification = remoteMessage.getData().get("idNotification");
         String image          = remoteMessage.getData().get("image");
 
-        String GROUP_KEY_WORK_EMAIL = "com.tissini.app/notifications";
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID);
+
         if(!image.equals("")){
-            Bitmap img = getBitmapFromURL(image);
-             notification
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(title)
-            .setContentText(body)
-            .setColor(Color.parseColor("#FF4EF2"))
-            .setLargeIcon(img)
-            .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setGroup(GROUP_KEY_WORK_EMAIL)
-            .setAutoCancel(true);
+            this.createNotificationWithImage(title,body,image,notification);
         }else{
-            notification
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(title)
-            .setContentText(body)
-            .setColor(Color.parseColor("#FF4EF2"))
-            .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setGroup(GROUP_KEY_WORK_EMAIL)
-            .setAutoCancel(true);
+            this.createNotificationWithoutImage(title,body,notification);
         }
 
+        NotificationCompat.Builder summaryNotification =new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID);
+        this.createGroupedNotification(title,body,summaryNotification);
+        this.createPendingIntent(link,idNotification,notification,summaryNotification);
+    }
 
+    public void createNotificationWithImage(String title,String body, String image, NotificationCompat.Builder notification){
+        Bitmap img = getBitmapFromURL(image);
+        notification
+          .setSmallIcon(R.mipmap.ic_launcher)
+          .setContentTitle(title)
+          .setContentText(body)
+          .setColor(Color.parseColor("#FF4EF2"))
+          .setLargeIcon(img)
+          .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
+          .setPriority(NotificationCompat.PRIORITY_HIGH)
+          .setGroup(GROUP_KEY_WORK_APP)
+          .setAutoCancel(true);
+    }
 
-        NotificationCompat.Builder summaryNotification =new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID)
-                .setContentTitle(title)
-                .setContentText(body)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setColor(Color.parseColor("#FF4EF2"))
-                .setGroup(GROUP_KEY_WORK_EMAIL)
-                .setGroupSummary(true)
-                .setAutoCancel(true);
+    public void createNotificationWithoutImage(String title,String body, NotificationCompat.Builder notification){
+        notification
+          .setSmallIcon(R.mipmap.ic_launcher)
+          .setContentTitle(title)
+          .setContentText(body)
+          .setColor(Color.parseColor("#FF4EF2"))
+          .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+          .setPriority(NotificationCompat.PRIORITY_HIGH)
+          .setGroup(GROUP_KEY_WORK_APP)
+          .setAutoCancel(true);
+    }
 
+    public void createGroupedNotification(String title,String body, NotificationCompat.Builder summaryNotification){
+        summaryNotification
+            .setContentTitle(title)
+            .setContentText(body)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setColor(Color.parseColor("#FF4EF2"))
+            .setGroup(GROUP_KEY_WORK_APP)
+            .setGroupSummary(true)
+            .setAutoCancel(true);
+    }
+
+    public void createPendingIntent(String link,String idNotification, NotificationCompat.Builder notification, NotificationCompat.Builder summaryNotification){
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("link",link);
@@ -88,6 +103,5 @@ public class NotificationsMessagingService extends MessagingService {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
         notificationManagerCompat.notify(Integer.parseInt(idNotification),notification.build());
         notificationManagerCompat.notify(0,summaryNotification.build());
-
     }
 }

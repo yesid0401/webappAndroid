@@ -59,6 +59,11 @@ public class WebViewClients extends WebViewClient {
     }
 
     @Override
+    public void onPageStarted (WebView view, String url, Bitmap favicon){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void onPageFinished (WebView view,String url){
 
         progressBar.setVisibility(View.INVISIBLE);
@@ -76,8 +81,4 @@ public class WebViewClients extends WebViewClient {
         });
     }
 
-    @Override
-    public void onPageStarted (WebView view, String url, Bitmap favicon){
-        progressBar.setVisibility(View.VISIBLE);
-    }
 }
