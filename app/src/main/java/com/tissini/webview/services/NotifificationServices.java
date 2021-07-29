@@ -13,7 +13,7 @@ public class NotifificationServices {
 
     public NotifificationServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://backofficeapi.tissini.app/")
+                .baseUrl("http://192.168.1.12:8000/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         notificationI = retrofit.create(NotificationI.class);

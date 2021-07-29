@@ -22,12 +22,14 @@ public class Webview {
     public WebSettings webSettings;
     public ProgressBar progressBar;
     public Intent intent;
+    public String url_production;
 
     public Webview(Activity activity,Intent intent){
         this.activity           = activity;
         this.webView            = (WebView) activity.findViewById(R.id.webview);
         this.progressBar        = (ProgressBar) activity.findViewById(R.id.progressBar);
         this.intent             = intent;
+        this.url_production     = activity.getString(R.string.production);
         this.webSettings        = this.webView.getSettings();
         this.webView.setWebChromeClient(new WebChromeClients(this.activity));
         this.webView.setWebViewClient(new WebViewClients(this.progressBar,this.webView,this.activity,intent));
@@ -43,22 +45,22 @@ public class Webview {
         webSettings.setUserAgentString(webSettings.getUserAgentString()+ " " + this.activity.getString(R.string.user_agent_suffix) + "" + BuildConfig.VERSION_NAME);
     }
 
-    public void loadUrl(String url){
+    public void loadUrl(){
         webSettings();
 
         Uri appLinkData = intent.getData();
         if(appLinkData != null)
-            url = appLinkData.toString(); //Open webview for deeplinking
+            this.url_production = appLinkData.toString(); //Open webview for deeplinking
 
         String link = intent.getStringExtra("link");
         if (link != null)
-            url = link; //Open webview for notification
+            this.url_production = link; //Open webview for notification
 
         Map<String, String> noCacheHeaders = new HashMap<String, String>(2);
         noCacheHeaders.put("Cache-Control", "no-cache");
         noCacheHeaders.put("Cache-Control", "no-store");
 
-        webView.loadUrl(url,noCacheHeaders);
+        webView.loadUrl(this.url_production,noCacheHeaders);
     }
 
     public boolean goBack(){
