@@ -10,10 +10,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NotifificationServices {
     private  NotificationI notificationI;
+    private String apiLocal ="http://localhost:8000/";
+    private String apiProduction = "https://backofficeapi.tissini.app/";
 
     public NotifificationServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.12:8000/")
+                .baseUrl(apiProduction)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         notificationI = retrofit.create(NotificationI.class);

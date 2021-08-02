@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.tissini.webview.BuildConfig;
 import com.tissini.webview.interfaces.VersionI;
 import com.tissini.webview.models.Version;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,10 +14,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VersionServices {
     private VersionI versionI;
-
+    String api = "https://v3.tissini.app/";
     public VersionServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://v3.tissini.app/")
+                .baseUrl(api)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         versionI = retrofit.create(VersionI.class);
