@@ -53,8 +53,13 @@ public class Webview {
             this.url_production = appLinkData.toString(); //Open webview for deeplinking
 
         String link = intent.getStringExtra("link");
-        if (link != null)
+        if (link != null) {
             this.url_production = link; //Open webview for notification
+            if (link.startsWith("https://www.youtube.com/") || link.startsWith("https://us02web.zoom.us/") || link.startsWith("https://tissini.com")){
+                this.url_production = activity.getString(R.string.production);
+            }
+        }
+
 
         Map<String, String> noCacheHeaders = new HashMap<String, String>(2);
         noCacheHeaders.put("Cache-Control", "no-cache");

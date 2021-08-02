@@ -44,15 +44,32 @@ public class NotificationsMessagingService extends MessagingService {
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID);
 
-        if(!image.equals("")){
-            this.createNotificationWithImage(title,body,image,notification);
+
+        if(!link.equals("")){
+            if(!image.equals("")){
+                this.createNotificationWithImage(title,body,image,notification);
+            }else{
+                this.createNotificationWithoutImage(title,body,notification);
+            }
+
+            NotificationCompat.Builder summaryNotification =new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID);
+            this.createGroupedNotification(title,body,summaryNotification);
+            this.createPendingIntent(link,idNotification,notification,summaryNotification);
         }else{
-            this.createNotificationWithoutImage(title,body,notification);
+
+            Intent intent = new Intent(this, NotificationBroadCastReceiver.class);
+            intent.putExtra("idNotification",10);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+            if(!image.equals("")){
+                this.createNotificationWithoutLinkWithImage(title,body,image,notification,pendingIntent);
+            }else{
+                this.createNotificationWithoutLinkWithoutImage(title,body,notification,pendingIntent);
+            }
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
+            notificationManagerCompat.notify(10,notification.build());
         }
 
-        NotificationCompat.Builder summaryNotification =new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID);
-        this.createGroupedNotification(title,body,summaryNotification);
-        this.createPendingIntent(link,idNotification,notification,summaryNotification);
     }
 
     public void createNotificationWithImage(String title,String body, String image, NotificationCompat.Builder notification){
@@ -79,6 +96,34 @@ public class NotificationsMessagingService extends MessagingService {
           .setPriority(NotificationCompat.PRIORITY_HIGH)
           .setGroup(GROUP_KEY_WORK_APP)
           .setAutoCancel(true);
+    }
+
+    public void createNotificationWithoutLinkWithImage(String title,String body, String image, NotificationCompat.Builder notification, PendingIntent pendingIntent){
+        Bitmap img = getBitmapFromURL(image);
+        notification
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setColor(Color.parseColor("#FF4EF2"))
+                .setLargeIcon(img)
+                .addAction(R.mipmap.ic_launcher,"Cerrar",pendingIntent)
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setGroup(GROUP_KEY_WORK_APP)
+                .setAutoCancel(true);
+    }
+
+    public void createNotificationWithoutLinkWithoutImage(String title,String body, NotificationCompat.Builder notification, PendingIntent pendingIntent){
+        notification
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setColor(Color.parseColor("#FF4EF2"))
+                .addAction(R.mipmap.ic_launcher,"Cerrar",pendingIntent)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setGroup(GROUP_KEY_WORK_APP)
+                .setAutoCancel(true);
     }
 
     public void createGroupedNotification(String title,String body, NotificationCompat.Builder summaryNotification){

@@ -1,5 +1,4 @@
 package com.tissini.webview;
-
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -15,6 +14,7 @@ import com.tissini.webview.webViewHelpers.WebChromeClients;
 import com.tissini.webview.webViewHelpers.Webview;
 import static com.tissini.webview.helpers.Functions.goToThePlayStore;
 import static com.tissini.webview.helpers.Functions.isOnline;
+import static com.tissini.webview.helpers.Functions.openApplication;
 
 public class MainActivity extends AppCompatActivity {
     Webview webview;
@@ -37,6 +37,19 @@ public class MainActivity extends AppCompatActivity {
                 NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 manager.cancel(0);
                 goToThePlayStore(this);
+        }
+
+        String link = getIntent().getStringExtra("link");
+        if(link != null) {
+            if (link.startsWith("https://www.youtube.com/")) {
+                openApplication(link,"com.google.android.youtube",this);
+            }
+            if (link.startsWith("https://us02web.zoom.us/")) {
+                openApplication(link,"us.zoom.videomeetings",this);
+            }
+            if (link.startsWith("https://tissini.com/")) {
+               openApplication(link,"com.android.chrome",this);
+            }
         }
 
         setTheme(R.style.SplashTheme);
@@ -79,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == FILECHOOSER_RESULTCODE) {
             if (null == mUploadMessage)
                 return;
-
             Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
