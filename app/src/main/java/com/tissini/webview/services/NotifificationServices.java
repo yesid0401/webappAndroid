@@ -15,7 +15,7 @@ public class NotifificationServices {
 
     public NotifificationServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(apiLocal)
+                .baseUrl(apiProduction)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         notificationI = retrofit.create(NotificationI.class);
