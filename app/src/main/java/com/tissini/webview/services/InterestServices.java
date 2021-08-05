@@ -13,19 +13,19 @@ import static com.tissini.webview.helpers.Functions.ParserDataLocalStorage;
 
 public class InterestServices {
     private InterestI interestI;
-    private String apiLocal ="http://192.168.1.13:8000/";
+    private String apiLocal ="http://192.168.1.9:8000/";
     private String apiProduction = "https://backofficeapi.tissini.app/";
     public InterestServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(apiProduction)
+                .baseUrl(apiLocal)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interestI = retrofit.create(InterestI.class);
     }
 
-    public void saveInterestsInDataBase(String client_id,String client_stage,String client_name, String client_platform,String client_escalafon ) {
+    public void saveInterestsInDataBase(String client_id,String client_stage,String client_name, String client_platform,String client_escalafon,String client_app) {
 
-        Interest interest =  new Interest(client_id,client_stage,client_name,client_platform,client_escalafon);
+        Interest interest =  new Interest(client_id,client_stage,client_name,client_platform,client_escalafon,client_app);
         Call<Interest> call = interestI.createInterest(interest);
 
         call.enqueue(new Callback<Interest>() {

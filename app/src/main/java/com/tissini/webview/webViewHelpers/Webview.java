@@ -55,7 +55,7 @@ public class Webview {
         String link = intent.getStringExtra("link");
         if (link != null) {
             this.url_production = link; //Open webview for notification
-            if (link.startsWith("https://www.youtube.com/") || link.startsWith("https://us02web.zoom.us/") || link.startsWith("https://tissini.com")){
+            if (link.startsWith("https://www.facebook.com/") || link.startsWith("https://www.youtube.com/") || link.startsWith("https://us02web.zoom.us/") || link.startsWith("https://tissini.com")){
                 this.url_production = activity.getString(R.string.production);
             }
         }

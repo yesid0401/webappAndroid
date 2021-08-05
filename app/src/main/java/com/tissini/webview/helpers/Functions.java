@@ -73,14 +73,20 @@ public class Functions {
 
     public static ArrayList<String> ParserDataLocalStorage(String value){
 
-        JsonObject customer_object    = JsonParser.parseString(value).getAsJsonObject();
-        String user_id                = customer_object.get("id").toString();
-        String user_name              = customer_object.get("name").toString().replaceAll("^[\"']+|[\"']+$", "");
-        String user_stage             = customer_object.get("stage").toString().replaceAll("^[\"']+|[\"']+$", "");
-        JsonElement elite             = customer_object.get("elite");
+//        JsonObject customer_object    = JsonParser.parseString(value).getAsJsonObject();
+//        String user_id                = customer_object.get("id").toString();
+//        String user_name              = customer_object.get("name").toString().replaceAll("^[\"']+|[\"']+$", "");
+//        String user_stage             = customer_object.get("stage").toString().replaceAll("^[\"']+|[\"']+$", "");
+//        JsonElement elite             = customer_object.get("elite");
+//
+//        JsonObject elite_object   = JsonParser.parseString(String.valueOf(elite)).getAsJsonObject();
+//        String user_escalafon     = tranformEscalafon(elite_object.get("escalafon").toString());
 
-        JsonObject elite_object   = JsonParser.parseString(String.valueOf(elite)).getAsJsonObject();
-        String user_escalafon     = tranformEscalafon(elite_object.get("escalafon").toString());
+
+        String user_id = "921010";
+        String user_stage = "CUSTOMER";
+        String user_escalafon = tranformEscalafon("null");
+        String user_name = "Cliente Prueba Tissini App";
 
         ArrayList<String> arrayList = new ArrayList();
         arrayList.add(user_id);
