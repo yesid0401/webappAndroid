@@ -50,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
             if (link.startsWith("https://tissini.com/")) {
                openApplication(link,"com.android.chrome",this);
             }
+            if(link.startsWith("https://www.facebook.com/")){
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(link));
+                startActivity(i);
+            }
         }
 
         setTheme(R.style.SplashTheme);
