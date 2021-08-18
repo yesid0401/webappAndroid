@@ -8,9 +8,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NotifificationServices {
+public class
+
+
+
+
+NotifificationServices {
     private  NotificationI notificationI;
-    private String apiLocal ="http://192.168.1.9:8000/";
+    private String apiLocal ="http://192.168.1.7:8000/";
     private String apiProduction = "https://backofficeapi.tissini.app/";
 
     public NotifificationServices() {

@@ -13,7 +13,7 @@ import static com.tissini.webview.helpers.Functions.ParserDataLocalStorage;
 
 public class InterestServices {
     private InterestI interestI;
-    private String apiLocal ="http://192.168.1.9:8000/";
+    private String apiLocal ="http://192.168.1.7:8000/";
     private String apiProduction = "https://backofficeapi.tissini.app/";
     public InterestServices() {
         Retrofit retrofit = new Retrofit.Builder()

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 manager.cancel(0);
                 goToThePlayStore(this);
         }
+        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
 
         String link = getIntent().getStringExtra("link");
         if(link != null) {
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
+
         getSupportActionBar().hide();
         webview = new Webview(this,getIntent());
         webview.loadUrl();

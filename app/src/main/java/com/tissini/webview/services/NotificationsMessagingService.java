@@ -13,6 +13,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.pusher.pushnotifications.fcm.MessagingService;
 import com.tissini.webview.MainActivity;
 import com.tissini.webview.R;
+
 import static com.tissini.webview.helpers.Functions.getBitmapFromURL;
 
 
@@ -20,10 +21,16 @@ public class NotificationsMessagingService extends MessagingService {
     private final static  String CHANEL_ID = "tissini";
     private final static  String CHANEL_ID_NAME = "tissini";
     private final static  String GROUP_KEY_WORK_APP = "com.tissini.app/notifications";
+    private Bitmap img;
+
     @Override
     public void onMessageReceived( RemoteMessage remoteMessage) {
-           createNotificationChanel();
-           CreateNotification(remoteMessage);
+            createNotificationChanel();
+            String image  = remoteMessage.getData().get("image");
+            if(!image.equals("")){
+                this.img = getBitmapFromURL(image);
+            }
+            CreateNotification(remoteMessage);
     }
 
     public void createNotificationChanel(){
@@ -79,8 +86,8 @@ public class NotificationsMessagingService extends MessagingService {
           .setContentTitle(title)
           .setContentText(body)
           .setColor(Color.parseColor("#FF4EF2"))
-          .setLargeIcon(img)
-          .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
+          .setLargeIcon(this.img)
+          .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(this.img).bigLargeIcon(null))
           .setPriority(NotificationCompat.PRIORITY_HIGH)
           .setGroup(GROUP_KEY_WORK_APP)
           .setAutoCancel(true);
@@ -105,9 +112,9 @@ public class NotificationsMessagingService extends MessagingService {
                 .setContentTitle(title)
                 .setContentText(body)
                 .setColor(Color.parseColor("#FF4EF2"))
-                .setLargeIcon(img)
+                .setLargeIcon(this.img)
                 .addAction(R.mipmap.ic_launcher,"Cerrar",pendingIntent)
-                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(this.img).bigLargeIcon(null))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setGroup(GROUP_KEY_WORK_APP)
                 .setAutoCancel(true);
