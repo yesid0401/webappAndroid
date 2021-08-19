@@ -46,6 +46,9 @@ public class InterestServices {
     }
 
     public  void addInterestsToUser(String value){
+        PushNotifications.clearDeviceInterests();
+        PushNotifications.addDeviceInterest("general");
+
         if(!value.equals("null")){
 
             ArrayList values = ParserDataLocalStorage(value);
@@ -53,21 +56,15 @@ public class InterestServices {
             String user_id         = values.get(0).toString();
             String user_stage      = values.get(1).toString();
             String user_escalafon  = values.get(2).toString();
-
-            PushNotifications.clearDeviceInterests();
-            PushNotifications.addDeviceInterest("general");
             PushNotifications.addDeviceInterest(user_id);
             PushNotifications.addDeviceInterest("Login");
             PushNotifications.addDeviceInterest(user_stage);
             PushNotifications.addDeviceInterest(user_escalafon);
             PushNotifications.addDeviceInterest("Android");
             PushNotifications.removeDeviceInterest("noLogin");
-
             System.out.println(PushNotifications.getDeviceInterests());
 
         }else{
-            PushNotifications.clearDeviceInterests();
-            PushNotifications.addDeviceInterest("general");
             PushNotifications.addDeviceInterest("noLogin");
             System.out.println(PushNotifications.getDeviceInterests());
         }

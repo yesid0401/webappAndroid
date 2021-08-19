@@ -65,10 +65,4 @@ public class  WebAppInterface {
         NotificationUpdate(mContext);
         goToThePlayStore(mContext);
     }
-
-
-
-
-
-
 }

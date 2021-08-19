@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
 
         if(!isOnline(this)){
             Toast toast = Toast.makeText(this, "Conectese a una red con internet", Toast.LENGTH_LONG);
@@ -50,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
             if (link.startsWith("https://tissini.com/")) {
                openApplication(link,"com.android.chrome",this);
             }
-            if(link.startsWith("https://www.facebook.com/")){
+
+            if(link.startsWith("https://www.facebook.com/") || link.startsWith("https://play.google.com/store/apps/details?id=com.tissini.webview")){
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(link));
                 startActivity(i);
@@ -60,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
         getSupportActionBar().hide();
         webview = new Webview(this,getIntent());
         webview.loadUrl();
