@@ -52,10 +52,15 @@ public class Webview {
         if(appLinkData != null)
             this.url_production = appLinkData.toString(); //Open webview for deeplinking
 
-        String link = intent.getStringExtra("link");
-        if (link != null) {
-            this.url_production = link; //Open webview for notification https://www.facebook.com/
-            if (link.startsWith("https://play.google.com/store/apps/details?id=com.tissini.webview") || link.startsWith("https://www.facebook.com/") || link.startsWith("https://www.youtube.com/") || link.startsWith("https://us02web.zoom.us/") || link.startsWith("https://tissini.com")){
+        String Notificationlink = intent.getStringExtra("link");
+        if (Notificationlink != null) {
+            this.url_production = Notificationlink; //Open webview for notification https://www.facebook.com/
+            if (Notificationlink.startsWith("https://play.google.com/store/apps/details?id=com.tissini.webview") ||
+                    Notificationlink.startsWith("https://www.facebook.com/") ||
+                    Notificationlink.startsWith("https://www.youtube.com/") ||
+                    Notificationlink.startsWith("https://us02web.zoom.us/") ||
+                    Notificationlink.startsWith("https://tissini.com"))
+            {
                 this.url_production = activity.getString(R.string.production);
             }
         }
