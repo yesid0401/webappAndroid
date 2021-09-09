@@ -13,6 +13,9 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.pusher.pushnotifications.fcm.MessagingService;
 import com.tissini.webview.MainActivity;
 import com.tissini.webview.R;
+import com.tissini.webview.controllers.UserController;
+import com.tissini.webview.database.AppDataBase;
+
 import static com.tissini.webview.helpers.Functions.getBitmapFromURL;
 
 
@@ -20,10 +23,17 @@ public class NotificationsMessagingService extends MessagingService {
     private final static  String CHANEL_ID = "tissini";
     private final static  String CHANEL_ID_NAME = "tissini";
     private final static  String GROUP_KEY_WORK_APP = "com.tissini.app/notifications";
+    private static NotifificationServices notifificationServices = new NotifificationServices();
+
     @Override
     public void onMessageReceived( RemoteMessage remoteMessage) {
            createNotificationChanel();
            CreateNotification(remoteMessage);
+
+           String user = UserController.getDataUser(this);
+           String idNotification = remoteMessage.getData().get("idNotification");
+           notifificationServices.readNotification(user,idNotification,"delivered");
+
     }
 
     public void createNotificationChanel(){

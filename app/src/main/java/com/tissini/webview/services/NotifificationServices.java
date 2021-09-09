@@ -10,19 +10,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NotifificationServices {
     private  NotificationI notificationI;
-    private String apiLocal ="http://192.168.1.13:8000/";
+    private String apiLocal ="http://192.168.1.10:8000/";
     private String apiProduction = "https://backofficeapi.tissini.app/";
 
     public NotifificationServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(apiProduction)
+                .baseUrl(apiLocal)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         notificationI = retrofit.create(NotificationI.class);
     }
 
-    public void readNotification(String idClient,String idNotification ) {
-        Notification notification =  new Notification(idClient,idNotification);
+    public void readNotification(String idClient,String idNotification, String status ) {
+        Notification notification =  new Notification(idClient,idNotification,status);
         Call<Notification> call = notificationI.readNotification(notification);
 
         call.enqueue(new Callback<Notification>() {

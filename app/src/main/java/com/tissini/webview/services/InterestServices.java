@@ -13,11 +13,11 @@ import static com.tissini.webview.helpers.Functions.ParserDataLocalStorage;
 
 public class InterestServices {
     private InterestI interestI;
-    private String apiLocal ="http://192.168.1.13:8000/";
+    private String apiLocal ="http://192.168.1.10:8000/";
     private String apiProduction = "https://backofficeapi.tissini.app/";
     public InterestServices() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(apiProduction)
+                .baseUrl(apiLocal)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interestI = retrofit.create(InterestI.class);

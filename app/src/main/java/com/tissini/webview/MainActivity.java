@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
+
 
 
         if(!isOnline(this)){
@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
                 manager.cancel(0);
                 goToThePlayStore(this);
         }
-
         String link = getIntent().getStringExtra("link");
         if(link != null) {
             if (link.startsWith("https://www.youtube.com/")) {
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
