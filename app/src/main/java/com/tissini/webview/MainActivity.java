@@ -10,8 +10,11 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.widget.Toast;
 import com.pusher.pushnotifications.PushNotifications;
+import com.tissini.webview.models.ManagerPreference;
 import com.tissini.webview.webViewHelpers.WebChromeClients;
 import com.tissini.webview.webViewHelpers.Webview;
+
+import static com.tissini.webview.controllers.NotificationController.readNotification;
 import static com.tissini.webview.helpers.Functions.goToThePlayStore;
 import static com.tissini.webview.helpers.Functions.isOnline;
 import static com.tissini.webview.helpers.Functions.openApplication;
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
+        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
 
         if(!isOnline(this)){
             Toast toast = Toast.makeText(this, "Conectese a una red con internet", Toast.LENGTH_LONG);
@@ -40,8 +43,15 @@ public class MainActivity extends AppCompatActivity {
                 manager.cancel(0);
                 goToThePlayStore(this);
         }
+
         String link = getIntent().getStringExtra("link");
         if(link != null) {
+
+            String idNotification = getIntent().getStringExtra("idNotification");
+            if(idNotification != null) {
+                readNotification(idNotification,"seen",this);
+            }
+
             if (link.startsWith("https://www.youtube.com/")) {
                 openApplication(link,"com.google.android.youtube",this);
             }
@@ -59,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
+
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

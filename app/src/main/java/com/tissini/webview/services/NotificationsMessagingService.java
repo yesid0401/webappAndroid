@@ -13,9 +13,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.pusher.pushnotifications.fcm.MessagingService;
 import com.tissini.webview.MainActivity;
 import com.tissini.webview.R;
-import com.tissini.webview.controllers.UserController;
-import com.tissini.webview.database.AppDataBase;
 
+import static com.tissini.webview.controllers.NotificationController.readNotification;
 import static com.tissini.webview.helpers.Functions.getBitmapFromURL;
 
 
@@ -30,10 +29,8 @@ public class NotificationsMessagingService extends MessagingService {
            createNotificationChanel();
            CreateNotification(remoteMessage);
 
-           String user = UserController.getDataUser(this);
            String idNotification = remoteMessage.getData().get("idNotification");
-           notifificationServices.readNotification(user,idNotification,"delivered");
-
+           readNotification(idNotification,"delivered",this);
     }
 
     public void createNotificationChanel(){

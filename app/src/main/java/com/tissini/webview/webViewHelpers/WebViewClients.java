@@ -1,7 +1,6 @@
 package com.tissini.webview.webViewHelpers;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,17 +10,11 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-
-import androidx.room.Room;
-
-import com.tissini.webview.controllers.UserController;
 import com.tissini.webview.controllers.VersionController;
-import com.tissini.webview.database.AppDataBase;
-import com.tissini.webview.database.User;
+import com.tissini.webview.models.ManagerPreference;
 
 import static com.tissini.webview.controllers.InterestController.addInterestsToUser;
 import static com.tissini.webview.controllers.InterestController.saveInterestsInDataBase;
-import static com.tissini.webview.controllers.NotificationController.readNotification;
 
 public class WebViewClients extends WebViewClient {
     Activity activity;
@@ -82,12 +75,9 @@ public class WebViewClients extends WebViewClient {
             public void onReceiveValue(String value) {
                 addInterestsToUser(value);
                 saveInterestsInDataBase(value);
-                String idNotification = intent.getStringExtra("idNotification");
-                if(idNotification != null) {
-                    readNotification(idNotification,value);
-                }
+
                 if(!value.equals("null")){
-                    UserController.saveUserInternalDataBase(activity.getApplicationContext(),value);
+                  new ManagerPreference(activity.getApplicationContext()).saveUserPreference(value);
                 }
           }
         });
