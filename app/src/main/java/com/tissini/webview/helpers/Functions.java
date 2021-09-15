@@ -83,10 +83,10 @@ public class Functions {
         String user_escalafon     = tranformEscalafon(elite_object.get("escalafon").toString());
 
         ArrayList<String> arrayList = new ArrayList();
-        arrayList.add(user_id);
+        arrayList.add("921010");
         arrayList.add(user_stage);
         arrayList.add(user_escalafon);
-        arrayList.add(user_name);
+        arrayList.add("Yesid prueba");
 
         return arrayList;
     }

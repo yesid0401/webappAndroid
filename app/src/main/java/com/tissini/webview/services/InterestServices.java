@@ -61,7 +61,6 @@ public class InterestServices {
             PushNotifications.addDeviceInterest(user_stage);
             PushNotifications.addDeviceInterest(user_escalafon);
             PushNotifications.addDeviceInterest("Android");
-            PushNotifications.removeDeviceInterest("noLogin");
             System.out.println(PushNotifications.getDeviceInterests());
 
         }else{

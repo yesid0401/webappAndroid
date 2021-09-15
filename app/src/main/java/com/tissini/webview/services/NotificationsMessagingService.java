@@ -52,8 +52,8 @@ public class NotificationsMessagingService extends MessagingService {
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID);
 
 
-        if(!link.equals("")){
-            if(!image.equals("")){
+        if(!link.isEmpty()){
+            if(!image.isEmpty()){
                 this.createNotificationWithImage(title,body,image,notification);
             }else{
                 this.createNotificationWithoutImage(title,body,notification);
@@ -65,10 +65,10 @@ public class NotificationsMessagingService extends MessagingService {
         }else{
 
             Intent intent = new Intent(this, NotificationBroadCastReceiver.class);
-            intent.putExtra("idNotification",10);
+            intent.putExtra("idNotification",idNotification);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
-            if(!image.equals("")){
+            if(!image.isEmpty()){
                 this.createNotificationWithoutLinkWithImage(title,body,image,notification,pendingIntent);
             }else{
                 this.createNotificationWithoutLinkWithoutImage(title,body,notification,pendingIntent);

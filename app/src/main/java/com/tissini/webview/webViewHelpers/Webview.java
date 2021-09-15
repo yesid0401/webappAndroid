@@ -48,13 +48,15 @@ public class Webview {
     public void loadUrl(){
         webSettings();
 
+
         Uri appLinkData = intent.getData();
         if(appLinkData != null)
-            this.url_production = appLinkData.toString(); //Open webview for deeplinking
+            this.url_production = appLinkData.toString(); //Open webview from deeplinking
 
         String Notificationlink = intent.getStringExtra("link");
         if (Notificationlink != null) {
             this.url_production = Notificationlink; //Open webview for notification https://www.facebook.com/
+
             if (Notificationlink.startsWith("https://play.google.com/store/apps/details?id=com.tissini.webview") ||
                     Notificationlink.startsWith("https://www.facebook.com/") ||
                     Notificationlink.startsWith("https://www.youtube.com/") ||
@@ -63,8 +65,9 @@ public class Webview {
             {
                 this.url_production = activity.getString(R.string.production);
             }
-        }
 
+
+        }
 
         Map<String, String> noCacheHeaders = new HashMap<String, String>(2);
         noCacheHeaders.put("Cache-Control", "no-cache");

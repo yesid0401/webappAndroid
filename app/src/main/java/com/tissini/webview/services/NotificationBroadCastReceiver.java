@@ -9,8 +9,10 @@ public class NotificationBroadCastReceiver  extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        int notificationId = Integer.parseInt(String.valueOf(intent.getIntExtra("idNotification",10)));
+        int idNotification = Integer.parseInt(String.valueOf(intent.getStringExtra("idNotification")));
+        System.out.println("idNotification => " + idNotification);
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.cancel(notificationId);
+        manager.cancel(idNotification);
     }
 }
+

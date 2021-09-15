@@ -14,4 +14,24 @@ public class Interest {
         this.client_platform = client_platform;
         this.client_escalafon = client_escalafon;
     }
+
+    public String getClient_id() {
+        return client_id;
+    }
+
+    public String getClient_name() {
+        return client_name;
+    }
+
+    public String getClient_stage() {
+        return client_stage;
+    }
+
+    public String getClient_platform() {
+        return client_platform;
+    }
+
+    public String getClient_escalafon() {
+        return client_escalafon;
+    }
 }
