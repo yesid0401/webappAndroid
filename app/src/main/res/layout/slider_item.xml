@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
     <ImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:contentDescription="@string/app_name"
+        android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/image_view"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"/>
+        android:layout_weight="1"
+        android:src="@drawable/five"
+        android:visibility="visible"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>

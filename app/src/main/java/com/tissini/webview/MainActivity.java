@@ -29,7 +29,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
+//        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
+//
+//        PushNotifications.clearDeviceInterests();
+//        PushNotifications.stop();
 
         if(!isOnline(this)){
             Toast toast = Toast.makeText(this, "Conectese a una red con internet", Toast.LENGTH_LONG);

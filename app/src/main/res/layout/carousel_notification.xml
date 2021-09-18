@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="256dp"
-    android:background="@color/carousalNotificationBackgroundColor">
+    android:layout_height="match_parent"
+   >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,10 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:padding="2dp"
-                android:singleLine="false"
-                android:layout_marginBottom="6dp"
                 android:textSize="14sp"
+                android:singleLine="false"
                 android:text="Presiona en el botón Actualizar para que disfrutes de nuevas y mejores experiencias"
                 android:textColor="@color/carousalDescriptionTextColor"
                 android:visibility="visible"/>
@@ -50,11 +48,12 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="match_parent"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
@@ -62,7 +61,7 @@
 
                 <LinearLayout
                     android:id="@+id/llLeftItemLayout"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
                     android:layout_marginLeft="0dp"
@@ -82,39 +81,14 @@
                         android:id="@+id/viewFlipper"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:autoStart="true"
+                        android:autoStart="false"
                         android:flipInterval="2500"
+                        android:padding="5dp"
                         android:inAnimation="@android:anim/slide_in_left"
                         android:outAnimation="@android:anim/slide_out_right">
 
-                        <ImageView
-                            android:id="@+id/ivImageLeft"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/three"
-                            android:visibility="visible"
-                            />
-                        <ImageView
-                            android:id="@+id/ivImageLefts"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/four"
-                            android:visibility="visible" />
-                        <ImageView
-                            android:id="@+id/ivImageLeftd"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/five"
-                            android:visibility="visible" />
+
+
                     </ViewFlipper>
                 </LinearLayout>
 
@@ -131,7 +105,7 @@
 
                 android:clickable="true"
                 android:padding="5dp"
-                android:src="@drawable/ic_carousal_right_icon" />
+                android:src="@drawable/arrow_rigth_color" />
 
             <ImageView
                 android:id="@+id/ivArrowLeft"
@@ -142,13 +116,10 @@
 
                 android:clickable="true"
                 android:padding="5dp"
-                android:src="@drawable/ic_carousal_left_arrow" />
+                android:src="@drawable/arrow_left_color" />
         </RelativeLayout>
 
 
     </LinearLayout>
-
-
-
 
 </RelativeLayout>
