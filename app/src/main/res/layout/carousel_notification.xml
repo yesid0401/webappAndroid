@@ -15,8 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:visibility="visible">
 
             <TextView
@@ -24,25 +24,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-
                 android:singleLine="true"
-                android:layout_marginTop="10dp"
-                android:text="¡Vamos a actualizar tu oficina virtual!"
-                android:textSize="16sp"
+                android:layout_marginTop="0dp"
+                android:text=""
                 android:textColor="@color/carousalTitleTextColor"
-                android:textStyle="bold"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                style="@style/TextAppearance.Compat.Notification.Title" />
 
             <TextView
                 android:id="@+id/tvCarousalContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:textSize="14sp"
                 android:singleLine="false"
-                android:text="Presiona en el botón Actualizar para que disfrutes de nuevas y mejores experiencias"
+                android:text=""
                 android:textColor="@color/carousalDescriptionTextColor"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                style="@style/TextAppearance.AppCompat"/>
 
         </LinearLayout>
 

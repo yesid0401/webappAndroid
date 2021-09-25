@@ -5,17 +5,34 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
+import android.widget.RemoteViews;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.RemoteMessage;
 import com.pusher.pushnotifications.fcm.MessagingService;
 import com.tissini.webview.MainActivity;
 import com.tissini.webview.R;
+import com.tissini.webview.helpers.LoadImageTask;
+import com.tissini.webview.receivers.LeftBroadCastReceiver;
+import com.tissini.webview.receivers.NotificationBroadCastReceiver;
+import com.tissini.webview.receivers.RightBroadCastReceiver;
+
+import java.util.HashMap;
 
 import static com.tissini.webview.controllers.NotificationController.readNotification;
 import static com.tissini.webview.helpers.Functions.getBitmapFromURL;
+import static com.tissini.webview.helpers.Functions.getPendingIntent;
+import static com.tissini.webview.helpers.Functions.listImagesLinks;
 
 
 public class NotificationsMessagingService extends MessagingService {
@@ -24,13 +41,21 @@ public class NotificationsMessagingService extends MessagingService {
     private final static  String GROUP_KEY_WORK_APP = "com.tissini.app/notifications";
     private static NotifificationServices notifificationServices = new NotifificationServices();
 
+    public static NotificationManagerCompat notificationManager;
+    public static  NotificationCompat.Builder notificationBuilder;
+    public  static  RemoteViews remoteViews;
+
     @Override
     public void onMessageReceived( RemoteMessage remoteMessage) {
            createNotificationChanel();
-           CreateNotification(remoteMessage);
+           String typeNotification = remoteMessage.getData().get("typeNotification");
+           if(typeNotification.equals("simple")) CreateNotification(remoteMessage);
+           else creteNotificationWithScroll(remoteMessage);
 
-           String idNotification = remoteMessage.getData().get("idNotification");
-           readNotification(idNotification,"delivered",this);
+  //
+//
+//           String idNotification = remoteMessage.getData().get("idNotification");
+//           readNotification(idNotification,"delivered",this);
     }
 
     public void createNotificationChanel(){
@@ -61,11 +86,12 @@ public class NotificationsMessagingService extends MessagingService {
 
             NotificationCompat.Builder summaryNotification =new NotificationCompat.Builder(getApplicationContext(),CHANEL_ID);
             this.createGroupedNotification(title,body,summaryNotification);
-            this.createPendingIntent(link,idNotification,notification,summaryNotification);
+            this.createPendingIntent(link,idNotification,image,notification,summaryNotification);
         }else{
 
             Intent intent = new Intent(this, NotificationBroadCastReceiver.class);
             intent.putExtra("idNotification",idNotification);
+            intent.putExtra("Link","Nolink");
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
             if(!image.isEmpty()){
@@ -74,7 +100,7 @@ public class NotificationsMessagingService extends MessagingService {
                 this.createNotificationWithoutLinkWithoutImage(title,body,notification,pendingIntent);
             }
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
-            notificationManagerCompat.notify(10,notification.build());
+            notificationManagerCompat.notify(Integer.parseInt(idNotification),notification.build());
         }
 
     }
@@ -86,10 +112,10 @@ public class NotificationsMessagingService extends MessagingService {
           .setContentTitle(title)
           .setContentText(body)
           .setColor(Color.parseColor("#FF4EF2"))
-          .setLargeIcon(img)
-          .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
           .setPriority(NotificationCompat.PRIORITY_HIGH)
           .setGroup(GROUP_KEY_WORK_APP)
+          .setLargeIcon(img)
+          .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(img).bigLargeIcon(null))
           .setAutoCancel(true);
     }
 
@@ -144,7 +170,7 @@ public class NotificationsMessagingService extends MessagingService {
             .setAutoCancel(true);
     }
 
-    public void createPendingIntent(String link,String idNotification, NotificationCompat.Builder notification, NotificationCompat.Builder summaryNotification){
+    public void createPendingIntent(String link,String idNotification, String image,NotificationCompat.Builder notification, NotificationCompat.Builder summaryNotification){
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("link",link);
@@ -155,5 +181,76 @@ public class NotificationsMessagingService extends MessagingService {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
         notificationManagerCompat.notify(Integer.parseInt(idNotification),notification.build());
         notificationManagerCompat.notify(0,summaryNotification.build());
+
+//        LoadImageTask currentLoadImageTask = new LoadImageTask(notificationManagerCompat, notification);
+//
+//        currentLoadImageTask.execute(image);
     }
+
+
+    public void creteNotificationWithScroll(RemoteMessage remoteMessage){
+        String body           = remoteMessage.getData().get("body");
+        String title          = remoteMessage.getData().get("title");
+        String link           = remoteMessage.getData().get("link");
+        String idNotification = remoteMessage.getData().get("idNotification");
+        String linksAndImages = remoteMessage.getData().get("data");
+
+        HashMap<String,String> linkImages = listImagesLinks(linksAndImages);
+
+        remoteViews = new RemoteViews(this.getPackageName(),R.layout.carousel_notification );
+        remoteViews.setTextViewText(R.id.tvCarousalTitle,title);
+        remoteViews.setTextViewText(R.id.tvCarousalContent,body);
+
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("link",link);
+        intent.putExtra("idNotification",idNotification);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(idNotification),intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        PendingIntent leftArrowPendingIntent = getPendingIntent(idNotification,"previews",LeftBroadCastReceiver.class,this);
+        remoteViews.setOnClickPendingIntent(R.id.ivArrowLeft, leftArrowPendingIntent);
+
+        PendingIntent rightArrowPendingIntent = getPendingIntent(idNotification,"next",RightBroadCastReceiver.class,this);
+        remoteViews.setOnClickPendingIntent(R.id.ivArrowRight, rightArrowPendingIntent);
+
+
+        RemoteViews remoteViewImage;
+
+        for (String value : linkImages.keySet()) {
+            try {
+                Bitmap img = getBitmapFromURL(value);
+
+                remoteViewImage = new RemoteViews(this.getPackageName(),R.layout.slider_item );
+                remoteViewImage.setImageViewBitmap(R.id.ivImage, img);
+                remoteViewImage.setTextViewText(R.id.tvi,linkImages.get(value));
+                remoteViews.addView(R.id.viewFlipper,remoteViewImage);
+
+                remoteViewImage.setOnClickPendingIntent(R.id.ivImage,pendingIntent);
+            }catch (Exception e){
+                System.out.println("error => "+e);
+            }
+
+        }
+        notificationBuilder = new NotificationCompat.Builder(this.getApplicationContext(),CHANEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setColor(Color.parseColor("#FF4EF2"))
+                .setContentTitle(title)
+                .setContentText(body)
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .setCustomBigContentView(remoteViews)
+                 .setSound(null)
+                .setAutoCancel(true);
+
+        notificationManager = NotificationManagerCompat.from(getApplicationContext());
+        notificationManager = NotificationManagerCompat.from(this.getApplicationContext());
+        notificationManager.notify(Integer.parseInt(idNotification),notificationBuilder.build());
+
+    }
+
+
+
+
+
 }

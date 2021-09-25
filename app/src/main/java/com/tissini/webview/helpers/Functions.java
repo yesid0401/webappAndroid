@@ -16,6 +16,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -35,7 +37,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -91,6 +95,20 @@ public class Functions {
         return arrayList;
     }
 
+    public  static  HashMap<String,String> listImagesLinks(String value){
+        HashMap<String,String> linkImages = new HashMap<>();
+        JsonArray arrayJsonImages = (JsonArray) JsonParser.parseString(value);
+
+        for (int i = 0;i < arrayJsonImages.size();i++){
+            JsonObject jsonObject = JsonParser.parseString(arrayJsonImages.get(i).toString()).getAsJsonObject();
+            String image = jsonObject.get("image").toString();
+            String link = jsonObject.get("link").toString();
+            linkImages.put(image,link);
+        }
+
+        return linkImages;
+    }
+
     public static String tranformEscalafon(String user_escalafon){
         Map<String,String> hashMapEscalafon = new HashMap<String, String>();
         hashMapEscalafon.put("null","Perla");
@@ -105,16 +123,21 @@ public class Functions {
 
     public static Bitmap getBitmapFromURL(String src) {
         try {
+            src = src.replaceAll("^[\"']+|[\"']+$", "");
             URL url = new URL(src);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
             Bitmap bitmap = BitmapFactory.decodeStream(input);
+            connection.disconnect();
             return bitmap;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
+            System.out.println("error al obtener imagen 1 " +e);
             return null;
         }
+
     }
 
     public static void shareImage(Bitmap img,String imageName,String productName,String productURL,Context mContext) throws IOException {
@@ -182,6 +205,16 @@ public class Functions {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(mContext.getApplicationContext());
         notificationManagerCompat.notify(0,notification.build());
 
+    }
+
+    public static PendingIntent getPendingIntent(String idNotification,String action, Class Receiver,Context context){
+        Intent intent = new Intent(context, Receiver);
+        Bundle bundle = new Bundle();
+        bundle.putString("idNotification",idNotification);
+        bundle.putString("action",action);
+        intent.putExtras(bundle);
+        PendingIntent leftArrowPendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return  leftArrowPendingIntent;
     }
 
 }

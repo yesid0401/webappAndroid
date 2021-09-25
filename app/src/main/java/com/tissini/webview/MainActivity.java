@@ -1,5 +1,6 @@
 package com.tissini.webview;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +10,8 @@ import android.os.Bundle;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.widget.Toast;
+
 import com.pusher.pushnotifications.PushNotifications;
-import com.tissini.webview.models.ManagerPreference;
 import com.tissini.webview.webViewHelpers.WebChromeClients;
 import com.tissini.webview.webViewHelpers.Webview;
 
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-//        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
+        PushNotifications.start(getApplicationContext(), getString(R.string.instanceId));
 //
 //        PushNotifications.clearDeviceInterests();
 //        PushNotifications.stop();
@@ -47,10 +48,16 @@ public class MainActivity extends AppCompatActivity {
                 goToThePlayStore(this);
         }
 
+
+        String idNotification = getIntent().getStringExtra("idNotification");
+        if(idNotification != null) {
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel(Integer.parseInt(idNotification));
+        }
+
         String link = getIntent().getStringExtra("link");
         if(link != null) {
 
-            String idNotification = getIntent().getStringExtra("idNotification");
             if(idNotification != null) {
                 readNotification(idNotification,"seen",this);
             }

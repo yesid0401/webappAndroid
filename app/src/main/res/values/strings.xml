@@ -3,7 +3,7 @@
     <string name="user_agent_suffix">/ANDROID_TISSINIAPP/</string>
     <string name="instanceId">c5b50bd9-f225-4b64-9352-b9851a952b1f</string>
     <string name="stage">https://stage.tissini.dev/</string>
-    <string name="production">https://tissini.app/</string>
+    <string name="production">https://tissini.app/ebL0EI</string>
     <string name="apiBackoffice">https://backofficeapi.tissini.app/</string>
     <string name="apiTissini">https://v3.tissini.app/</string>
     <string name="apiLocal">http://localhost:8000/</string>
